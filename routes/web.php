@@ -2,21 +2,22 @@
 
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Auth; // Pastikan Auth diimpor untuk redirect setelah login
+use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\Admin\MakananController;
+use App\Http\Controllers\Admin\KriteriaController;
+use App\Http\Controllers\Admin\AdminDashboardController;
+use App\Http\Controllers\Admin\PenggunaController;
+use App\Http\Controllers\Admin\SkalaKriteriaController;
+use App\Http\Controllers\Admin\BobotGapController;
+use App\Http\Controllers\Admin\PengaturanController;
+use App\Http\Controllers\Pasien\PasienDashboardController;
+use App\Http\Controllers\Pasien\ProfilKesehatanController;
+use App\Http\Controllers\Pasien\RiwayatRekomendasiController;
+use App\Http\Controllers\Pasien\MakananPribadiController;
+use App\Http\Controllers\Pasien\RekomendasiController;
+use App\Http\Controllers\Admin\LaporanController;
 
-// Impor semua Controller Admin dengan alias yang jelas
-use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
-use App\Http\Controllers\Admin\MakananController as AdminMakananController; // Alias untuk Admin\MakananController
-use App\Http\Controllers\Admin\KriteriaController as AdminKriteriaController; // Alias untuk Admin\KriteriaController
-use App\Http\Controllers\Admin\UserController as AdminUserController; // Alias untuk Admin\UserController
 
-// Impor semua Controller Pasien
-use App\Http\Controllers\Pasien\DashboardController as PasienDashboardController;
-use App\Http\Controllers\Pasien\ProfilPasienController;
-use App\Http\Controllers\Pasien\UserMakananController; // Pasien\UserMakananController
-
-// Impor Controller Rekomendasi (jika di root namespace Controller)
-use App\Http\Controllers\RekomendasiController;
 
 
 /*
@@ -42,45 +43,59 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    // --- Routes untuk Pasien ---
-    Route::middleware(['role:pasien'])->prefix('pasien')->name('pasien.')->group(function () {
-        // Dashboard Pasien
+    // Group Route untuk Pasien
+    Route::prefix('pasien')->name('pasien.')->middleware(['auth', 'role:pasien'])->group(function () {
+        
+        // Route Dashboard Pasien
         Route::get('/dashboard', [PasienDashboardController::class, 'index'])->name('dashboard');
         
-        // Profil Gizi Pasien
-        Route::get('/profil', [ProfilPasienController::class, 'show'])->name('profil.show');
-        Route::get('/profil/create', [ProfilPasienController::class, 'create'])->name('profil.create');
-        Route::post('/profil', [ProfilPasienController::class, 'store'])->name('profil.store');
-        Route::get('/profil/edit', [ProfilPasienController::class, 'edit'])->name('profil.edit');
-        Route::put('/profil', [ProfilPasienController::class, 'update'])->name('profil.update');
+        // Route Profil Kesehatan & Kalkulator BMR
+        Route::get('/profil', [ProfilKesehatanController::class, 'index'])->name('profil.index');
+        Route::post('/profil', [ProfilKesehatanController::class, 'store'])->name('profil.store');
+        Route::get('/profil/summary', [ProfilKesehatanController::class, 'show'])->name('profil.show');
 
-        // Rekomendasi Makanan
+        // Route Makanan Pribadi
+        Route::resource('makanan_pribadi', MakananPribadiController::class)->except(['show']);
+
+        // Route Jelajahi Menu (Sistem)
+        Route::get('/menu', [App\Http\Controllers\Pasien\MakananSistemController::class, 'index'])->name('menu.index');
+
+        // Route Riwayat Rekomendasi
+        Route::get('/riwayat', [RiwayatRekomendasiController::class, 'index'])->name('riwayat.index');
+        Route::get('/riwayat/{id}', [RiwayatRekomendasiController::class, 'show'])->name('riwayat.show');
+
+        // Route Rekomendasi (Engine Profile Matching)
         Route::get('/rekomendasi', [RekomendasiController::class, 'index'])->name('rekomendasi.index');
-        
-        // Riwayat Rekomendasi
-        Route::get('/history-rekomendasi', [RekomendasiController::class, 'history'])->name('history');
+        Route::post('/rekomendasi/hitung', [RekomendasiController::class, 'hitung'])->name('rekomendasi.hitung');
 
-        Route::delete('/history-rekomendasi/{hasilKeputusan}', [RekomendasiController::class, 'destroy'])->name('history.destroy'); // <-- TAMBAHKAN INI
-        Route::get('/history-rekomendasi/{hasilKeputusan}', [RekomendasiController::class, 'show'])->name('history.show');
-
-        // Manajemen Makanan Pribadi oleh Pengguna (Pasien)
-        // Menggunakan UserMakananController untuk mengelola Makanan yang diinput user
-        Route::resource('user-makanan', UserMakananController::class)->except(['show']); 
     });
 
-    // --- Routes untuk Admin ---
-    Route::middleware(['role:admin'])->prefix('admin')->name('admin.')->group(function () {
-        // Dashboard Admin
+
+
+    // Group Route untuk Admin
+    Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->group(function () {
+        
+        // Route Dashboard Admin
         Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
         
-        // Manajemen Makanan Umum oleh Admin
-        Route::resource('makanan', AdminMakananController::class); // Menggunakan alias AdminMakananController
+        // Route CRUD Pengguna (Pasien)
+        Route::resource('pengguna', PenggunaController::class);
+
+
+        Route::resource('makanan', MakananController::class);
+        Route::resource('kriteria', KriteriaController::class);
+
+        // Custom names untuk resource agar URL dan name route lebih rapi
+        Route::resource('skala', SkalaKriteriaController::class)->parameters(['skala' => 'id']);
+        Route::resource('bobot', BobotGapController::class)->parameters(['bobot' => 'id']);
         
-        // Manajemen Kriteria oleh Admin
-        Route::resource('kriteria', AdminKriteriaController::class); // Menggunakan alias AdminKriteriaController
-        
-        // Manajemen Pengguna oleh Admin
-        Route::resource('users', AdminUserController::class)->except(['show']); // Menggunakan alias AdminUserController
+        // Route khusus Pengaturan karena tidak pakai pola resource penuh
+        Route::get('pengaturan', [PengaturanController::class, 'index'])->name('pengaturan.index');
+        Route::post('pengaturan/update', [PengaturanController::class, 'update'])->name('pengaturan.update');
+
+        // Route Laporan Rekomendasi
+        Route::get('/laporan', [LaporanController::class, 'index'])->name('laporan.index');
+        Route::get('/laporan/cetak', [LaporanController::class, 'cetak'])->name('laporan.cetak');
     });
 
     // --- Redirect setelah login (sebagai fallback atau initial dashboard) ---
@@ -98,4 +113,3 @@ Route::middleware('auth')->group(function () {
 
 // Mengimpor rute autentikasi Laravel Breeze (login, register, dll.)
 require __DIR__.'/auth.php';
-

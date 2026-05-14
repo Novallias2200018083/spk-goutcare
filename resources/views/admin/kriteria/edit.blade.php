@@ -1,48 +1,56 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Edit Kriteria') }}
-        </h2>
+        <div class="flex items-center gap-4">
+            <a href="{{ route('admin.kriteria.index') }}" class="text-slate-400 hover:text-slate-600 transition-colors">
+                <i class="fas fa-arrow-left"></i>
+            </a>
+            <h2 class="font-bold text-2xl text-slate-800">
+                {{ __('Edit Kriteria') }}
+            </h2>
+        </div>
     </x-slot>
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900">
+    <div class="py-6">
+        <div class="max-w-2xl mx-auto">
+            <div class="bg-white border border-slate-200 rounded-lg shadow-sm">
+                <div class="p-8">
                     <form method="POST" action="{{ route('admin.kriteria.update', $kriteria) }}">
                         @csrf
                         @method('PUT')
 
-                        <div class="mb-5">
-                            <x-input-label for="nama_kriteria" :value="__('Nama Kriteria')" />
-                            <x-text-input id="nama_kriteria" class="block mt-1 w-full" type="text" name="nama_kriteria" :value="old('nama_kriteria', $kriteria->nama_kriteria)" required autofocus />
-                            <x-input-error :messages="$errors->get('nama_kriteria')" class="mt-2" />
+                        <div class="space-y-6">
+                            <div>
+                                <label for="nama_kriteria" class="block text-sm font-semibold text-slate-700 mb-1">Nama Kriteria</label>
+                                <input id="nama_kriteria" type="text" name="nama_kriteria" value="{{ old('nama_kriteria', $kriteria->nama_kriteria) }}" required autofocus
+                                    class="w-full text-sm p-2.5 rounded border-slate-200 bg-slate-50 focus:bg-white focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 transition-all">
+                                <x-input-error :messages="$errors->get('nama_kriteria')" class="mt-1" />
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-semibold text-slate-700 mb-2">Tipe Faktor (Profile Matching)</label>
+                                <div class="grid grid-cols-2 gap-4">
+                                    <label class="relative flex flex-col p-4 border border-slate-200 rounded cursor-pointer hover:bg-slate-50 transition-colors has-[:checked]:border-indigo-600 has-[:checked]:bg-indigo-50">
+                                        <input type="radio" name="tipe_faktor" value="Core" class="hidden" required {{ old('tipe_faktor', $kriteria->tipe_faktor) == 'Core' ? 'checked' : '' }}>
+                                        <span class="text-sm font-bold text-slate-800">Core Factor</span>
+                                        <span class="text-[10px] text-slate-500 mt-1">Faktor utama penilaian.</span>
+                                    </label>
+                                    <label class="relative flex flex-col p-4 border border-slate-200 rounded cursor-pointer hover:bg-slate-50 transition-colors has-[:checked]:border-indigo-600 has-[:checked]:bg-indigo-50">
+                                        <input type="radio" name="tipe_faktor" value="Secondary" class="hidden" required {{ old('tipe_faktor', $kriteria->tipe_faktor) == 'Secondary' ? 'checked' : '' }}>
+                                        <span class="text-sm font-bold text-slate-800">Secondary Factor</span>
+                                        <span class="text-[10px] text-slate-500 mt-1">Faktor pendukung.</span>
+                                    </label>
+                                </div>
+                                <x-input-error :messages="$errors->get('tipe_faktor')" class="mt-2" />
+                            </div>
                         </div>
 
-                        <div class="mb-5">
-                            <x-input-label for="bobot" :value="__('Bobot (untuk SAW)')" />
-                            <x-text-input id="bobot" class="block mt-1 w-full" type="number" step="0.01" min="0" max="1" name="bobot" :value="old('bobot', $kriteria->bobot)" required />
-                            <p class="text-sm text-gray-500 mt-1">Rentang bobot antara 0.00 hingga 1.00. Total bobot semua kriteria SAW idealnya adalah 1.00.</p>
-                            <x-input-error :messages="$errors->get('bobot')" class="mt-2" />
-                        </div>
-
-                        <div class="mb-5">
-                            <x-input-label for="tipe" :value="__('Tipe Kriteria')" />
-                            <select id="tipe" name="tipe" class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm block mt-1 w-full" required>
-                                <option value="">Pilih Tipe</option>
-                                <option value="benefit" {{ old('tipe', $kriteria->tipe) == 'benefit' ? 'selected' : '' }}>Benefit (Semakin Tinggi Semakin Baik)</option>
-                                <option value="cost" {{ old('tipe', $kriteria->tipe) == 'cost' ? 'selected' : '' }}>Cost (Semakin Rendah Semakin Baik)</option>
-                            </select>
-                            <x-input-error :messages="$errors->get('tipe')" class="mt-2" />
-                        </div>
-
-                        <div class="flex items-center justify-end mt-6">
-                            <x-secondary-button href="{{ route('admin.kriteria.index') }}" class="me-3">
+                        <div class="flex items-center justify-end mt-10 gap-3">
+                            <a href="{{ route('admin.kriteria.index') }}" class="px-4 py-2 text-sm font-bold text-slate-500 hover:text-slate-700 transition-colors">
                                 {{ __('Batal') }}
-                            </x-secondary-button>
-                            <x-primary-button>
+                            </a>
+                            <button type="submit" class="px-6 py-2 bg-indigo-600 text-white rounded font-bold text-xs uppercase tracking-widest hover:bg-indigo-700 transition-colors">
                                 {{ __('Perbarui Kriteria') }}
-                            </x-primary-button>
+                            </button>
                         </div>
                     </form>
                 </div>

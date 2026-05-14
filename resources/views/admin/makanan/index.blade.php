@@ -1,91 +1,95 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Manajemen Makanan') }}
-        </h2>
+        <div class="flex justify-between items-center w-full">
+            <h2 class="font-bold text-xl text-slate-800">
+                {{ __('Manajemen Makanan') }}
+            </h2>
+            <a href="{{ route('admin.makanan.create') }}" class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 transition duration-150">
+                <i class="fas fa-plus mr-2"></i> Tambah Makanan
+            </a>
+        </div>
     </x-slot>
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900">
+    <div class="py-6">
+        <div class="max-w-7xl mx-auto">
+            <div class="bg-white overflow-hidden shadow-sm border border-slate-200 rounded-lg">
+                <div class="p-6">
+                    {{-- Alert Messages --}}
                     @if (session('success'))
-                        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
-                            <span class="block sm:inline">{{ session('success') }}</span>
+                        <div class="bg-emerald-50 border border-emerald-200 text-emerald-700 px-4 py-3 rounded-md mb-6 flex items-center">
+                            <i class="fas fa-check-circle mr-2"></i>
+                            <span class="text-sm font-medium">{{ session('success') }}</span>
                         </div>
                     @endif
-                    @if (session('error'))
-                        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
-                            <span class="block sm:inline">{{ session('error') }}</span>
-                        </div>
-                    @endif
-
-                    <div class="flex justify-between items-center mb-6">
-                        <h3 class="text-xl font-bold">Daftar Makanan (Admin Input)</h3>
-                        <a href="{{ route('admin.makanan.create') }}" class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150">
-                            Tambah Makanan Baru
-                        </a>
-                    </div>
 
                     @if ($makanans->isEmpty())
-                        <p class="text-gray-600">Belum ada data makanan yang ditambahkan oleh admin.</p>
+                        <div class="text-center py-20">
+                            <div class="w-32 h-32 bg-indigo-50 rounded-full flex items-center justify-center mx-auto mb-6">
+                                <i class="fas fa-utensils text-5xl text-indigo-300"></i>
+                            </div>
+                            <h3 class="text-2xl font-bold text-gray-800 mb-2">Belum Ada Data Makanan</h3>
+                            <p class="text-gray-500">Mulai isi database sistem dengan menambahkan data makanan sehat untuk pasien.</p>
+                        </div>
                     @else
-                        <div class="overflow-x-auto shadow-md sm:rounded-lg">
-                            <table class="w-full text-sm text-left rtl:text-right text-gray-500">
-                                <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+                        <div class="overflow-x-auto border border-slate-100 rounded-lg">
+                            <table class="w-full text-sm text-left">
+                                <thead class="text-xs text-slate-500 uppercase bg-slate-50 border-b border-slate-100">
                                     <tr>
-                                        <th scope="col" class="px-6 py-3">Nama Makanan</th>
-                                        <th scope="col" class="px-6 py-3">Kadar Purin (mg)</th>
-                                        <th scope="col" class="px-6 py-3">Kalori (kkal)</th>
-                                        <th scope="col" class="px-6 py-3">Protein (g)</th>
-                                        <th scope="col" class="px-6 py-3">Lemak (g)</th>
-                                        <th scope="col" class="px-6 py-3">Aksi</th>
+                                        <th scope="col" class="px-6 py-4 font-semibold">Nama Makanan</th>
+                                        @php
+                                            $kriterias = \App\Models\Kriteria::all();
+                                        @endphp
+                                        @foreach($kriterias as $k)
+                                            <th scope="col" class="px-6 py-4 font-semibold text-center">{{ $k->nama_kriteria }}</th>
+                                        @endforeach
+                                        <th scope="col" class="px-6 py-4 font-semibold text-right">Aksi</th>
                                     </tr>
                                 </thead>
-                                <tbody>
+                                <tbody class="divide-y divide-gray-100">
                                     @foreach ($makanans as $makanan)
-                                        <tr class="bg-white border-b hover:bg-gray-50">
-                                            <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
-                                                {{ $makanan->nama_makanan }}
-                                            </th>
-                                            {{-- Loop kriteria secara dinamis jika jumlah kriteria bisa berubah --}}
-                                            @php
-                                                $nilaiByKriteria = [];
-                                                foreach ($makanan->nilaiKriteria as $nk) {
-                                                    $nilaiByKriteria[$nk->kriteria->nama_kriteria] = $nk->nilai;
-                                                }
-                                            @endphp
-                                            <td class="px-6 py-4">
-                                                {{ $nilaiByKriteria['Kadar Purin'] ?? '-' }}
+                                        <tr class="hover:bg-indigo-50/50 transition duration-150">
+                                            <td class="px-6 py-5">
+                                                <div class="font-bold text-gray-900">{{ $makanan->nama_makanan }}</div>
+                                                <div class="text-xs text-gray-400 mt-1 line-clamp-1 italic">{{ $makanan->deskripsi }}</div>
                                             </td>
-                                            <td class="px-6 py-4">
-                                                {{ $nilaiByKriteria['Kalori'] ?? '-' }}
-                                            </td>
-                                            <td class="px-6 py-4">
-                                                {{ $nilaiByKriteria['Protein'] ?? '-' }}
-                                            </td>
-                                            <td class="px-6 py-4">
-                                                {{ $nilaiByKriteria['Lemak'] ?? '-' }}
-                                            </td>
-                                            <td class="px-6 py-4 whitespace-nowrap">
-                                                <a href="{{ route('admin.makanan.edit', $makanan) }}" class="font-medium text-indigo-600 hover:text-indigo-900 mr-3">Edit</a>
-                                                <form action="{{ route('admin.makanan.destroy', $makanan) }}" method="POST" class="inline">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="font-medium text-red-600 hover:text-red-900" onclick="return confirm('Apakah Anda yakin ingin menghapus makanan ini? Aksi ini tidak dapat dibatalkan.')">Hapus</button>
-                                                </form>
+                                            @foreach($kriterias as $k)
+                                                @php
+                                                    $nilai = $makanan->nilaiKriterias->where('kriteria_id', $k->id)->first();
+                                                @endphp
+                                                <td class="px-6 py-5 text-center font-semibold text-gray-700">
+                                                    {{ $nilai ? $nilai->nilai : '-' }}
+                                                </td>
+                                            @endforeach
+                                            <td class="px-6 py-5 text-right whitespace-nowrap">
+                                                <div class="flex justify-end gap-2">
+                                                    <a href="{{ route('admin.makanan.edit', $makanan) }}" class="p-2 bg-indigo-50 text-indigo-600 rounded-xl hover:bg-indigo-100 transition duration-300" title="Edit">
+                                                        <i class="fas fa-edit"></i>
+                                                    </a>
+                                                    <form action="{{ route('admin.makanan.destroy', $makanan) }}" method="POST" class="inline">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit" class="p-2 bg-red-50 text-red-600 rounded-xl hover:bg-red-100 transition duration-300" onclick="return confirm('Apakah Anda yakin ingin menghapus makanan ini?')" title="Hapus">
+                                                            <i class="fas fa-trash"></i>
+                                                        </button>
+                                                    </form>
+                                                </div>
                                             </td>
                                         </tr>
                                     @endforeach
                                 </tbody>
                             </table>
                         </div>
-                        <div class="mt-6">
-                            {{ $makanans->links() }}
-                        </div>
                     @endif
                 </div>
             </div>
         </div>
     </div>
+
+    <style>
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in-down { animation: fadeInDown 0.5s ease-out forwards; }
+    </style>
 </x-app-layout>
