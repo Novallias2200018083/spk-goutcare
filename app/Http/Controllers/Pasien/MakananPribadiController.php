@@ -15,7 +15,7 @@ class MakananPribadiController extends Controller
     // 1. Menampilkan daftar makanan khusus milik user yang sedang login
     public function index()
     {
-        $makanans = Auth::user()->makananCustom()->with('nilaiKriterias.kriteria')->latest()->get();
+        $makanans = Auth::user()->makananCustom()->with('nilaiKriterias.kriteria')->latest()->paginate(10);
         return view('pasien.makanan_pribadi.index', compact('makanans'));
     }
 

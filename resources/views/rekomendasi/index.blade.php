@@ -108,9 +108,6 @@
                                             Status Kelayakan
                                         </th>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
-                                            Nilai SAW
-                                        </th>
-                                        <th scope="col" class="px-6 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
                                             Nilai Profile Matching
                                         </th>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-bold text-gray-700 uppercase tracking-wider">
@@ -146,7 +143,6 @@
                                                 @endif
                                                 {{ $rec['status_layak'] }}
                                             </td>
-                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{{ number_format($rec['nilai_saw'], 4) }}</td>
                                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{{ number_format($rec['nilai_profile_matching'], 4) }}</td>
                                             <td class="px-6 py-4 whitespace-nowrap font-extrabold text-purple-700 text-lg">{{ number_format($rec['final_score'], 4) }}</td>
                                             <td class="px-6 py-4 text-sm text-gray-600 max-w-xs overflow-hidden text-ellipsis">

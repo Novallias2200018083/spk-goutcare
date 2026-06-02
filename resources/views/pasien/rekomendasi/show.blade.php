@@ -95,7 +95,7 @@
                         <i class="fas fa-calculator text-purple-600 mr-3"></i> Detail Perhitungan Sistem Pendukung Keputusan
                     </h4>
                     <p class="text-gray-700 mb-6 leading-relaxed">
-                        Berikut adalah penjelasan rinci mengenai langkah-langkah perhitungan yang digunakan untuk menentukan rekomendasi makanan ini, menggunakan kombinasi metode Simple Additive Weighting (SAW) dan Profile Matching.
+                        Berikut adalah penjelasan rinci mengenai langkah-langkah perhitungan yang digunakan untuk menentukan rekomendasi makanan ini, menggunakan metode Profile Matching.
                     </p>
 
                     {{-- Matriks Keputusan --}}
@@ -140,107 +140,12 @@
                         @endif
                     </div>
 
-                    {{-- Normalisasi SAW --}}
-                    <div class="mb-10 p-6 bg-green-50 rounded-xl shadow-lg animate-fade-in-slow">
-                        <h5 class="font-bold text-xl text-green-700 mb-4 flex items-center">
-                            <i class="fas fa-compress-arrows-alt text-green-500 mr-2"></i> 2. Matriks Normalisasi SAW (R)
-                        </h5>
-                        <p class="text-gray-700 mb-4">
-                            Tahap ini mengubah nilai-nilai kriteria ke dalam skala yang seragam (0-1) agar dapat dibandingkan. Untuk kriteria 'Benefit' (semakin besar semakin baik), nilai dinormalisasi dengan membagi nilai kriteria dengan nilai maksimum dari semua makanan. Untuk kriteria 'Cost' (semakin kecil semakin baik), nilai dinormalisasi dengan membagi nilai minimum dari semua makanan dengan nilai kriteria makanan ini. Hal ini memastikan bahwa semua kriteria, terlepas dari satuannya, memiliki dampak yang sebanding dalam perhitungan.
-                        </p>
-                        @if (!empty($normalisasiSAW))
-                            <div class="overflow-x-auto shadow-md rounded-lg border border-green-200 mb-4">
-                                <table class="min-w-full divide-y divide-green-200 bg-white">
-                                    <thead class="bg-green-100">
-                                        <tr>
-                                            <th class="px-6 py-3 text-left text-xs font-bold text-green-700 uppercase tracking-wider">Kriteria</th>
-                                            <th class="px-6 py-3 text-left text-xs font-bold text-green-700 uppercase tracking-wider">Nilai Normalisasi</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody class="divide-y divide-green-100">
-                                        @foreach ($normalisasiSAW as $makananId => $normalizedValues)
-                                            @foreach ($kriterias as $kriteria)
-                                                <tr class="hover:bg-green-50">
-                                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ $kriteria->nama_kriteria }}</td>
-                                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700 font-semibold">
-                                                        {{ is_numeric($normalizedValues[$kriteria->id] ?? null) ? number_format($normalizedValues[$kriteria->id], 4) : 'N/A' }}
-                                                    </td>
-                                                </tr>
-                                            @endforeach
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                            </div>
-                        @else
-                            <p class="text-red-600 italic">Normalisasi SAW tidak tersedia.</p>
-                        @endif
-                        @if (!empty($maxMinValues))
-                            <div class="mt-4 p-4 bg-green-100 rounded-lg text-sm border border-green-300">
-                                <p class="font-semibold text-green-800 flex items-center">
-                                    <i class="fas fa-info-circle mr-2"></i> Nilai Maksimum/Minimum (untuk normalisasi):
-                                </p>
-                                <ul class="list-disc list-inside text-green-700 ml-4 mt-2">
-                                    @foreach ($kriterias as $kriteria)
-                                        @if (isset($maxMinValues[$kriteria->id]) && is_array($maxMinValues[$kriteria->id]))
-                                            <li>
-                                                <strong>{{ $kriteria->nama_kriteria }}:</strong>
-                                                @if ($kriteria->tipe === 'benefit')
-                                                    Max = <span class="font-bold">{{ is_numeric($maxMinValues[$kriteria->id]['max'] ?? null) ? number_format($maxMinValues[$kriteria->id]['max'], 2) : 'N/A' }}</span>
-                                                @else
-                                                    Min = <span class="font-bold">{{ is_numeric($maxMinValues[$kriteria->id]['min'] ?? null) ? number_format($maxMinValues[$kriteria->id]['min'], 2) : 'N/A' }}</span>
-                                                @endif
-                                            </li>
-                                        @else
-                                            <li>
-                                                <strong>{{ $kriteria->nama_kriteria }}:</strong> Data Max/Min tidak valid atau tidak tersedia.
-                                            </li>
-                                        @endif
-                                    @endforeach
-                                </ul>
-                            </div>
-                        @endif
-                    </div>
 
-                    {{-- Peringkat SAW --}}
-                    <div class="mb-10 p-6 bg-yellow-50 rounded-xl shadow-lg animate-fade-in-slow">
-                        <h5 class="font-bold text-xl text-yellow-700 mb-4 flex items-center">
-                            <i class="fas fa-sort-numeric-up-alt text-yellow-500 mr-2"></i> 3. Peringkat SAW (V)
-                        </h5>
-                        <p class="text-gray-700 mb-4">
-                            Nilai SAW dihitung dengan menjumlahkan hasil perkalian antara nilai kriteria yang telah dinormalisasi dengan bobot masing-masing kriteria. Bobot kriteria mencerminkan tingkat kepentingan setiap kriteria dalam pengambilan keputusan. Semakin tinggi nilai SAW, semakin baik makanan tersebut berdasarkan kriteria yang telah ditentukan dan bobotnya.
-                        </p>
-                        @if (!empty($peringkatSAW))
-                            <div class="overflow-x-auto shadow-md rounded-lg border border-yellow-200">
-                                <table class="min-w-full divide-y divide-yellow-200 bg-white">
-                                    <thead class="bg-yellow-100">
-                                        <tr>
-                                            <th class="px-6 py-3 text-left text-xs font-bold text-yellow-700 uppercase tracking-wider">Makanan</th>
-                                            <th class="px-6 py-3 text-left text-xs font-bold text-yellow-700 uppercase tracking-wider">Nilai SAW</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody class="divide-y divide-yellow-100">
-                                        @foreach ($peringkatSAW as $makananId => $nilaiSAW)
-                                            <tr class="hover:bg-yellow-50">
-                                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                                    {{ $hasilKeputusan->makananTerpilih->nama_makanan ?? 'N/A' }}
-                                                </td>
-                                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700 font-semibold">
-                                                    {{ is_numeric($nilaiSAW) ? number_format($nilaiSAW, 4) : 'N/A' }}
-                                                </td>
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                            </div>
-                        @else
-                            <p class="text-red-600 italic">Peringkat SAW tidak tersedia.</p>
-                        @endif
-                    </div>
 
                     {{-- Normalisasi Profile Matching --}}
                     <div class="mb-10 p-6 bg-purple-50 rounded-xl shadow-lg animate-fade-in-slow">
                         <h5 class="font-bold text-xl text-purple-700 mb-4 flex items-center">
-                            <i class="fas fa-arrows-alt-h text-purple-500 mr-2"></i> 4. Normalisasi Profile Matching
+                            <i class="fas fa-arrows-alt-h text-purple-500 mr-2"></i> 2. Normalisasi Profile Matching
                         </h5>
                         <p class="text-gray-700 mb-4">
                             Normalisasi Profile Matching melibatkan perhitungan 'gap' (selisih) antara nilai kriteria makanan dengan nilai target yang Anda miliki (berdasarkan profil pasien Anda). Setiap selisih ini kemudian diterjemahkan menjadi 'nilai terjemahan' berdasarkan tabel bobot gap yang telah ditentukan. Nilai ini mencerminkan seberapa sesuai makanan dengan target Anda.
@@ -295,46 +200,12 @@
                         @endif
                     </div>
 
-                    {{-- Peringkat SAW --}}
-                    <div class="mb-10 p-6 bg-teal-50 rounded-xl shadow-lg animate-fade-in-slow">
-                        <h5 class="font-bold text-xl text-teal-700 mb-4 flex items-center">
-                            <i class="fas fa-chart-bar text-teal-500 mr-2"></i> 5. Peringkat SAW (V)
-                        </h5>
-                        <p class="text-gray-700 mb-4">
-                            Nilai ini merepresentasikan skor akhir makanan berdasarkan metode SAW setelah semua kriteria dinormalisasi dan dikalikan dengan bobotnya. Nilai yang lebih tinggi menunjukkan peringkat yang lebih baik dalam preferensi SAW.
-                        </p>
-                        @if (!empty($peringkatSAW))
-                            <div class="overflow-x-auto shadow-md rounded-lg border border-teal-200">
-                                <table class="min-w-full divide-y divide-teal-200 bg-white">
-                                    <thead class="bg-teal-100">
-                                        <tr>
-                                            <th class="px-6 py-3 text-left text-xs font-bold text-teal-700 uppercase tracking-wider">Makanan</th>
-                                            <th class="px-6 py-3 text-left text-xs font-bold text-teal-700 uppercase tracking-wider">Nilai SAW</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody class="divide-y divide-teal-100">
-                                        @foreach ($peringkatSAW as $makananId => $nilaiSAW)
-                                            <tr class="hover:bg-teal-50">
-                                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                                    {{ $hasilKeputusan->makananTerpilih->nama_makanan ?? 'N/A' }}
-                                                </td>
-                                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700 font-semibold">
-                                                    {{ is_numeric($nilaiSAW) ? number_format($nilaiSAW, 4) : 'N/A' }}
-                                                </td>
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                            </div>
-                        @else
-                            <p class="text-red-600 italic">Peringkat SAW tidak tersedia.</p>
-                        @endif
-                    </div>
+
 
                     {{-- Peringkat Profile Matching --}}
                     <div class="mb-10 p-6 bg-pink-50 rounded-xl shadow-lg animate-fade-in-slow">
                         <h5 class="font-bold text-xl text-pink-700 mb-4 flex items-center">
-                            <i class="fas fa-chart-pie text-pink-500 mr-2"></i> 6. Peringkat Profile Matching
+                            <i class="fas fa-chart-pie text-pink-500 mr-2"></i> 3. Peringkat Profile Matching
                         </h5>
                         <p class="text-gray-700 mb-4">
                             Ini adalah nilai akhir Profile Matching untuk makanan ini, yang mencerminkan seberapa dekat profil makanan ini dengan profil gizi ideal Anda berdasarkan selisih kriteria dan bobotnya. Nilai yang lebih tinggi berarti kesesuaian yang lebih baik dengan profil target.
@@ -386,7 +257,7 @@
                                 <i class="fas fa-award mr-2 text-green-600"></i> <span class="text-green-700">{{ $namaMakanan }}</span> **Layak Dikonsumsi** untuk Anda.
                             </p>
                             <p class="text-lg">
-                                **Alasan:** Kadar purin pada <span class="font-semibold">{{ $namaMakanan }}</span> adalah <span class="font-bold text-green-700">{{ $purinInfo }} mg</span>, yang berada <span class="underline">di bawah atau setara</span> dengan batas toleransi purin Anda yaitu <span class="font-bold text-green-700">{{ $toleransiInfo }} mg</span>. Selain itu, berdasarkan perhitungan gabungan metode SAW dan Profile Matching, makanan ini mendapatkan nilai akhir sebesar <span class="font-bold text-purple-700">{{ $finalScoreFormatted }}</span>, yang menunjukkan kesesuaian yang baik dengan profil gizi dan kriteria yang Anda miliki.
+                                **Alasan:** Kadar purin pada <span class="font-semibold">{{ $namaMakanan }}</span> adalah <span class="font-bold text-green-700">{{ $purinInfo }} mg</span>, yang berada <span class="underline">di bawah atau setara</span> dengan batas toleransi purin Anda yaitu <span class="font-bold text-green-700">{{ $toleransiInfo }} mg</span>. Selain itu, berdasarkan perhitungan metode Profile Matching, makanan ini mendapatkan nilai akhir sebesar <span class="font-bold text-purple-700">{{ $finalScoreFormatted }}</span>, yang menunjukkan kesesuaian yang baik dengan profil gizi dan kriteria yang Anda miliki.
                             </p>
                         </div>
                     @else
@@ -395,7 +266,7 @@
                                 <i class="fas fa-exclamation-triangle mr-2 text-red-600"></i> <span class="text-red-700">{{ $namaMakanan }}</span> **Tidak Layak Dikonsumsi** untuk Anda.
                             </p>
                             <p class="text-lg">
-                                **Alasan:** Kadar purin pada <span class="font-semibold">{{ $namaMakanan }}</span> adalah <span class="font-bold text-red-700">{{ $purinInfo }} mg</span>, yang <span class="underline">melebihi</span> batas toleransi purin Anda yaitu <span class="font-bold text-red-700">{{ $toleransiInfo }} mg</span>. Meskipun perhitungan SAW dan Profile Matching menghasilkan nilai akhir sebesar <span class="font-bold text-purple-700">{{ $finalScoreFormatted }}</span>, kriteria kadar purin memiliki prioritas tinggi dalam penentuan kelayakan bagi kondisi Anda. Oleh karena itu, makanan ini tidak direkomendasikan.
+                                **Alasan:** Kadar purin pada <span class="font-semibold">{{ $namaMakanan }}</span> adalah <span class="font-bold text-red-700">{{ $purinInfo }} mg</span>, yang <span class="underline">melebihi</span> batas toleransi purin Anda yaitu <span class="font-bold text-red-700">{{ $toleransiInfo }} mg</span>. Meskipun perhitungan Profile Matching menghasilkan nilai akhir sebesar <span class="font-bold text-purple-700">{{ $finalScoreFormatted }}</span>, kriteria kadar purin memiliki prioritas tinggi dalam penentuan kelayakan bagi kondisi Anda. Oleh karena itu, makanan ini tidak direkomendasikan.
                             </p>
                         </div>
                     @endif

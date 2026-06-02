@@ -79,9 +79,6 @@ class RekomendasiController extends Controller
                 'kriterias' => $kriterias,
                 'finalRecommendations' => collect([]), // Kirim koleksi kosong
                 'matriksKeputusan' => [],
-                'normalisasiSAW' => [],
-                'peringkatSAW' => [],
-                'maxMinValues' => [],
                 'normalisasiPM' => [],
                 'peringkatPM' => [],
             ])->with('info', 'Tidak ada data makanan atau kriteria yang cukup untuk menghasilkan rekomendasi.');
@@ -107,7 +104,6 @@ class RekomendasiController extends Controller
                     'tanggal_keputusan' => now()->toDateString() // Contoh: Simpan per hari. Sesuaikan tipe kolom di DB (date/datetime)
                 ],
                 [
-                    'nilai_saw' => $recommendation['nilai_saw'],
                     'nilai_profile_matching' => $recommendation['nilai_profile_matching'],
                     'rekomendasi_akhir' => $recommendation['final_score'], // Simpan skor total
                     'is_layak' => $recommendation['is_layak'], // Simpan status kelayakan
@@ -120,10 +116,7 @@ class RekomendasiController extends Controller
             'profilPasien' => $profilPasien,
             'kriterias' => $kriterias,
             'finalRecommendations' => $result['finalRecommendations'], // Hasil akhir
-            'matriksKeputusan' => $result['matriksKeputusan'], // Detail perhitungan
-            'normalisasiSAW' => $result['normalisasiSAW'],
-            'peringkatSAW' => $result['peringkatSAW'],
-            'maxMinValues' => $result['maxMinValues'] ?? [], // Penting untuk penjelasan normalisasi
+            'matriksKeputusan' => $result['matriksKeputusan'] ?? [], // Detail perhitungan
             'normalisasiPM' => $result['normalisasiPM'] ?? [], // Hasil PM (jika diimplementasikan)
             'peringkatPM' => $result['peringkatPM'] ?? [], // Hasil PM (jika diimplementasikan)
         ]);
@@ -265,23 +258,13 @@ class RekomendasiController extends Controller
             $filteredMatriksKeputusan[$currentMakananObjId] = $calculationDetails['matriksKeputusan'][$currentMakananObjId];
         }
 
-        $filteredNormalisasiSAW = [];
-        if (isset($calculationDetails['normalisasiSAW'][$currentMakananObjId])) {
-            $filteredNormalisasiSAW[$currentMakananObjId] = $calculationDetails['normalisasiSAW'][$currentMakananObjId];
-        }
-        
-        // MaxMinValues tidak perlu difilter per makanan karena itu nilai global
-        $maxMinValues = $calculationDetails['maxMinValues'] ?? [];
+
 
         $filteredNormalisasiPM = [];
         if (isset($calculationDetails['normalisasiPM'][$currentMakananObjId])) {
             $filteredNormalisasiPM[$currentMakananObjId] = $calculationDetails['normalisasiPM'][$currentMakananObjId];
         }
 
-        $filteredPeringkatSAW = [];
-        if (isset($calculationDetails['peringkatSAW'][$currentMakananObjId])) {
-            $filteredPeringkatSAW[$currentMakananObjId] = $calculationDetails['peringkatSAW'][$currentMakananObjId];
-        }
 
         $filteredPeringkatPM = [];
         if (isset($calculationDetails['peringkatPM'][$currentMakananObjId])) {
@@ -293,10 +276,7 @@ class RekomendasiController extends Controller
             'hasilKeputusan' => $hasilKeputusan,
             'kriterias' => $kriterias, // Tetap kirim semua kriteria untuk header tabel
             'matriksKeputusan' => $filteredMatriksKeputusan,
-            'normalisasiSAW' => $filteredNormalisasiSAW,
-            'maxMinValues' => $maxMinValues,
             'normalisasiPM' => $filteredNormalisasiPM,
-            'peringkatSAW' => $filteredPeringkatSAW,
             'peringkatPM' => $filteredPeringkatPM,
             'currentFoodDetails' => $currentFoodDetails // Detail spesifik makanan ini dari hasil SPK
         ]);

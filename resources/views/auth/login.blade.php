@@ -9,7 +9,7 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
@@ -21,7 +21,7 @@
             theme: {
                 extend: {
                     fontFamily: {
-                        'inter': ['Inter', 'sans-serif'],
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
                     },
                     animation: {
                         'fade-in-up': 'fadeInUp 0.8s ease-out',
@@ -37,13 +37,16 @@
 
     <style>
         body {
-            font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #f0fdfa 0%, #ecfdf5 30%, #f0f9ff 70%, #fef3f2 100%);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #fcfdfc;
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(16, 185, 129, 0.05) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(59, 130, 246, 0.03) 0px, transparent 50%);
             min-height: 100vh;
         }
 
         .dark body {
-            background: linear-gradient(135deg, #042f2e 0%, #0f172a 50%, #0c1117 100%);
+            background: #0a0f0d;
         }
 
         .glass-effect {
@@ -104,17 +107,9 @@
         .floating-shape {
             position: absolute;
             border-radius: 50%;
-            filter: blur(40px);
-            opacity: 0.7;
-            animation: float 8s ease-in-out infinite;
-        }
-
-        .floating-shape:nth-child(2) {
-            animation-delay: -2s;
-        }
-
-        .floating-shape:nth-child(3) {
-            animation-delay: -4s;
+            filter: blur(80px);
+            opacity: 0.15;
+            z-index: -1;
         }
 
         /* Text contrast improvements */
@@ -198,10 +193,9 @@
 </head>
 
 <body class="antialiased font-inter">
-    <div class="fixed inset-0 overflow-hidden pointer-events-none">
-        <div class="floating-shape w-72 h-72 bg-emerald-400 -top-36 -left-36"></div>
-        <div class="floating-shape w-96 h-96 bg-cyan-400 top-1/2 -right-48"></div>
-        <div class="floating-shape w-80 h-80 bg-teal-400 -bottom-40 left-1/3"></div>
+    <div class="fixed inset-0 overflow-hidden pointer-events-none -z-10">
+        <div class="floating-shape w-96 h-96 bg-brand-500/10 -top-48 -left-48"></div>
+        <div class="floating-shape w-[600px] h-[600px] bg-emerald-500/5 -bottom-48 -right-48"></div>
     </div>
 
     <div class="min-h-screen flex items-center justify-center p-4 relative">

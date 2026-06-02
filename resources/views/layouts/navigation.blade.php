@@ -17,7 +17,7 @@
         {{-- Brand --}}
         <div class="flex items-center h-16 px-6 border-b border-slate-200 mb-6">
             <a class="flex items-center space-x-3" href="/">
-                <div class="w-8 h-8 bg-indigo-600 rounded flex items-center justify-center text-white">
+                <div class="w-8 h-8 bg-emerald-600 rounded flex items-center justify-center text-white">
                     <i class="fas fa-plus-square"></i>
                 </div>
                 <span class="text-xl font-bold text-slate-800 tracking-tight">GoutCare</span>
@@ -38,53 +38,53 @@
                     @endphp
                     
                     <li>
-                        <a href="{{ route($dashboardRoute) }}" class="flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors {{ request()->routeIs($dashboardRoute) ? 'bg-indigo-50 text-indigo-700' : 'text-slate-600 hover:bg-slate-50' }}">
-                            <i class="fas fa-home w-5 mr-3 {{ request()->routeIs($dashboardRoute) ? 'text-indigo-600' : 'text-slate-400' }}"></i>
+                        <a href="{{ route($dashboardRoute) }}" class="flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors {{ request()->routeIs($dashboardRoute) ? 'bg-emerald-50 text-emerald-700' : 'text-slate-600 hover:bg-slate-50' }}">
+                            <i class="fas fa-home w-5 mr-3 {{ request()->routeIs($dashboardRoute) ? 'text-emerald-600' : 'text-slate-400' }}"></i>
                             Dashboard
                         </a>
                     </li>
 
                     @if ($isAdmin)
                         <li>
-                            <a href="{{ route('admin.pengguna.index') }}" class="flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors {{ request()->routeIs('admin.pengguna.*') ? 'bg-indigo-50 text-indigo-700' : 'text-slate-600 hover:bg-slate-50' }}">
-                                <i class="fas fa-users w-5 mr-3 {{ request()->routeIs('admin.pengguna.*') ? 'text-indigo-600' : 'text-slate-400' }}"></i>
+                            <a href="{{ route('admin.pengguna.index') }}" class="flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors {{ request()->routeIs('admin.pengguna.*') ? 'bg-emerald-50 text-emerald-700' : 'text-slate-600 hover:bg-slate-50' }}">
+                                <i class="fas fa-users w-5 mr-3 {{ request()->routeIs('admin.pengguna.*') ? 'text-emerald-600' : 'text-slate-400' }}"></i>
                                 Pasien
                             </a>
                         </li>
                         <li>
-                            <a href="{{ route('admin.makanan.index') }}" class="flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors {{ request()->routeIs('admin.makanan.*') ? 'bg-indigo-50 text-indigo-700' : 'text-slate-600 hover:bg-slate-50' }}">
-                                <i class="fas fa-hamburger w-5 mr-3 {{ request()->routeIs('admin.makanan.*') ? 'text-indigo-600' : 'text-slate-400' }}"></i>
+                            <a href="{{ route('admin.makanan.index') }}" class="flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors {{ request()->routeIs('admin.makanan.*') ? 'bg-emerald-50 text-emerald-700' : 'text-slate-600 hover:bg-slate-50' }}">
+                                <i class="fas fa-hamburger w-5 mr-3 {{ request()->routeIs('admin.makanan.*') ? 'text-emerald-600' : 'text-slate-400' }}"></i>
                                 Database Makanan
                             </a>
                         </li>
                         <li>
-                            <a href="{{ route('admin.laporan.index') }}" class="flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors {{ request()->routeIs('admin.laporan.*') ? 'bg-indigo-50 text-indigo-700' : 'text-slate-600 hover:bg-slate-50' }}">
-                                <i class="fas fa-chart-pie w-5 mr-3 {{ request()->routeIs('admin.laporan.*') ? 'text-indigo-600' : 'text-slate-400' }}"></i>
+                            <a href="{{ route('admin.laporan.index') }}" class="flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors {{ request()->routeIs('admin.laporan.*') ? 'bg-emerald-50 text-emerald-700' : 'text-slate-600 hover:bg-slate-50' }}">
+                                <i class="fas fa-chart-pie w-5 mr-3 {{ request()->routeIs('admin.laporan.*') ? 'text-emerald-600' : 'text-slate-400' }}"></i>
                                 Laporan
                             </a>
                         </li>
                     @else
                         <li>
-                            <a href="{{ route('pasien.profil.show') }}" class="flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors {{ request()->routeIs('pasien.profil.*') ? 'bg-indigo-50 text-indigo-700' : 'text-slate-600 hover:bg-slate-50' }}">
-                                <i class="fas fa-user-circle w-5 mr-3 {{ request()->routeIs('pasien.profil.*') ? 'text-indigo-600' : 'text-slate-400' }}"></i>
+                            <a href="{{ route('pasien.profil.show') }}" class="flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors {{ request()->routeIs('pasien.profil.*') ? 'bg-emerald-50 text-emerald-700' : 'text-slate-600 hover:bg-slate-50' }}">
+                                <i class="fas fa-user-circle w-5 mr-3 {{ request()->routeIs('pasien.profil.*') ? 'text-emerald-600' : 'text-slate-400' }}"></i>
                                 Profil Kesehatan
                             </a>
                         </li>
                         <li>
-                            <a href="{{ route('pasien.makanan_pribadi.index') }}" class="flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors {{ request()->routeIs('pasien.makanan_pribadi.*') ? 'bg-indigo-50 text-indigo-700' : 'text-slate-600 hover:bg-slate-50' }}">
-                                <i class="fas fa-leaf w-5 mr-3 {{ request()->routeIs('pasien.makanan_pribadi.*') ? 'text-indigo-600' : 'text-slate-400' }}"></i>
+                            <a href="{{ route('pasien.makanan_pribadi.index') }}" class="flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors {{ request()->routeIs('pasien.makanan_pribadi.*') ? 'bg-emerald-50 text-emerald-700' : 'text-slate-600 hover:bg-slate-50' }}">
+                                <i class="fas fa-leaf w-5 mr-3 {{ request()->routeIs('pasien.makanan_pribadi.*') ? 'text-emerald-600' : 'text-slate-400' }}"></i>
                                 Makanan Saya
                             </a>
                         </li>
                         <li>
-                            <a href="{{ route('pasien.rekomendasi.index') }}" class="flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors {{ request()->routeIs('pasien.rekomendasi.*') ? 'bg-indigo-50 text-indigo-700' : 'text-slate-600 hover:bg-slate-50' }}">
-                                <i class="fas fa-lightbulb w-5 mr-3 {{ request()->routeIs('pasien.rekomendasi.*') ? 'text-indigo-600' : 'text-slate-400' }}"></i>
+                            <a href="{{ route('pasien.rekomendasi.index') }}" class="flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors {{ request()->routeIs('pasien.rekomendasi.*') ? 'bg-emerald-50 text-emerald-700' : 'text-slate-600 hover:bg-slate-50' }}">
+                                <i class="fas fa-lightbulb w-5 mr-3 {{ request()->routeIs('pasien.rekomendasi.*') ? 'text-emerald-600' : 'text-slate-400' }}"></i>
                                 Rekomendasi
                             </a>
                         </li>
                         <li>
-                            <a href="{{ route('pasien.riwayat.index') }}" class="flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors {{ request()->routeIs('pasien.riwayat.*') ? 'bg-indigo-50 text-indigo-700' : 'text-slate-600 hover:bg-slate-50' }}">
-                                <i class="fas fa-history w-5 mr-3 {{ request()->routeIs('pasien.riwayat.*') ? 'text-indigo-600' : 'text-slate-400' }}"></i>
+                            <a href="{{ route('pasien.riwayat.index') }}" class="flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors {{ request()->routeIs('pasien.riwayat.*') ? 'bg-emerald-50 text-emerald-700' : 'text-slate-600 hover:bg-slate-50' }}">
+                                <i class="fas fa-history w-5 mr-3 {{ request()->routeIs('pasien.riwayat.*') ? 'text-emerald-600' : 'text-slate-400' }}"></i>
                                 Riwayat
                             </a>
                         </li>
@@ -100,26 +100,26 @@
                     </div>
                     <ul class="space-y-1">
                         <li>
-                            <a href="{{ route('admin.kriteria.index') }}" class="flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors {{ request()->routeIs('admin.kriteria.*') ? 'bg-indigo-50 text-indigo-700' : 'text-slate-600 hover:bg-slate-50' }}">
-                                <i class="fas fa-sliders-h w-5 mr-3 {{ request()->routeIs('admin.kriteria.*') ? 'text-indigo-600' : 'text-slate-400' }}"></i>
+                            <a href="{{ route('admin.kriteria.index') }}" class="flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors {{ request()->routeIs('admin.kriteria.*') ? 'bg-emerald-50 text-emerald-700' : 'text-slate-600 hover:bg-slate-50' }}">
+                                <i class="fas fa-sliders-h w-5 mr-3 {{ request()->routeIs('admin.kriteria.*') ? 'text-emerald-600' : 'text-slate-400' }}"></i>
                                 Kriteria
                             </a>
                         </li>
                         <li>
-                            <a href="{{ route('admin.skala.index') }}" class="flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors {{ request()->routeIs('admin.skala.*') ? 'bg-indigo-50 text-indigo-700' : 'text-slate-600 hover:bg-slate-50' }}">
-                                <i class="fas fa-ruler w-5 mr-3 {{ request()->routeIs('admin.skala.*') ? 'text-indigo-600' : 'text-slate-400' }}"></i>
+                            <a href="{{ route('admin.skala.index') }}" class="flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors {{ request()->routeIs('admin.skala.*') ? 'bg-emerald-50 text-emerald-700' : 'text-slate-600 hover:bg-slate-50' }}">
+                                <i class="fas fa-ruler w-5 mr-3 {{ request()->routeIs('admin.skala.*') ? 'text-emerald-600' : 'text-slate-400' }}"></i>
                                 Skala
                             </a>
                         </li>
                         <li>
-                            <a href="{{ route('admin.bobot.index') }}" class="flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors {{ request()->routeIs('admin.bobot.*') ? 'bg-indigo-50 text-indigo-700' : 'text-slate-600 hover:bg-slate-50' }}">
-                                <i class="fas fa-balance-scale w-5 mr-3 {{ request()->routeIs('admin.bobot.*') ? 'text-indigo-600' : 'text-slate-400' }}"></i>
+                            <a href="{{ route('admin.bobot.index') }}" class="flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors {{ request()->routeIs('admin.bobot.*') ? 'bg-emerald-50 text-emerald-700' : 'text-slate-600 hover:bg-slate-50' }}">
+                                <i class="fas fa-balance-scale w-5 mr-3 {{ request()->routeIs('admin.bobot.*') ? 'text-emerald-600' : 'text-slate-400' }}"></i>
                                 Bobot GAP
                             </a>
                         </li>
                         <li>
-                            <a href="{{ route('admin.pengaturan.index') }}" class="flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors {{ request()->routeIs('admin.pengaturan.*') ? 'bg-indigo-50 text-indigo-700' : 'text-slate-600 hover:bg-slate-50' }}">
-                                <i class="fas fa-cogs w-5 mr-3 {{ request()->routeIs('admin.pengaturan.*') ? 'text-indigo-600' : 'text-slate-400' }}"></i>
+                            <a href="{{ route('admin.pengaturan.index') }}" class="flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors {{ request()->routeIs('admin.pengaturan.*') ? 'bg-emerald-50 text-emerald-700' : 'text-slate-600 hover:bg-slate-50' }}">
+                                <i class="fas fa-cogs w-5 mr-3 {{ request()->routeIs('admin.pengaturan.*') ? 'text-emerald-600' : 'text-slate-400' }}"></i>
                                 Parameter
                             </a>
                         </li>

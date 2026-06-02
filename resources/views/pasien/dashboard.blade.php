@@ -17,7 +17,7 @@
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {{-- Status Profil --}}
                 <div class="bg-white border border-slate-200 rounded-lg p-6 shadow-sm flex items-center gap-4">
-                    <div class="w-12 h-12 bg-indigo-50 text-indigo-600 rounded-full flex items-center justify-center flex-shrink-0">
+                    <div class="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-full flex items-center justify-center flex-shrink-0">
                         <i class="fas fa-user-circle text-xl"></i>
                     </div>
                     <div>
@@ -60,16 +60,16 @@
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 {{-- Main Action --}}
                 <div class="lg:col-span-2 space-y-6">
-                    <div class="bg-indigo-600 rounded-lg p-8 text-white shadow-lg shadow-indigo-100 flex flex-col md:flex-row items-center gap-8">
+                    <div class="bg-emerald-600 rounded-lg p-8 text-white shadow-lg shadow-emerald-100 flex flex-col md:flex-row items-center gap-8">
                         <div class="flex-1 text-center md:text-left">
                             <h3 class="text-2xl font-bold mb-2">Butuh Rekomendasi Menu?</h3>
-                            <p class="text-indigo-100 text-sm opacity-80 leading-relaxed mb-6">Sistem kami akan menganalisis ratusan menu makanan untuk menemukan yang paling aman bagi kondisi Asam Urat Anda.</p>
-                            <a href="{{ route('pasien.rekomendasi.index') }}" class="inline-flex items-center px-6 py-3 bg-white text-indigo-600 rounded font-bold text-xs uppercase tracking-widest hover:bg-indigo-50 transition-all shadow-md">
+                            <p class="text-emerald-100 text-sm opacity-80 leading-relaxed mb-6">Sistem kami akan menganalisis ratusan menu makanan untuk menemukan yang paling aman bagi kondisi Asam Urat Anda.</p>
+                            <a href="{{ route('pasien.rekomendasi.index') }}" class="inline-flex items-center px-6 py-3 bg-white text-emerald-600 rounded font-bold text-xs uppercase tracking-widest hover:bg-emerald-50 transition-all shadow-md">
                                 Mulai Analisis SPK <i class="fas fa-arrow-right ml-2"></i>
                             </a>
                         </div>
                         <div class="hidden md:block">
-                            <i class="fas fa-magic text-8xl text-indigo-500 opacity-50"></i>
+                            <i class="fas fa-magic text-8xl text-emerald-500 opacity-50"></i>
                         </div>
                     </div>
 
@@ -77,7 +77,7 @@
                     <div class="bg-white border border-slate-200 rounded-lg shadow-sm">
                         <div class="p-4 border-b border-slate-100 flex justify-between items-center">
                             <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest">Riwayat Rekomendasi Terakhir</h3>
-                            <a href="{{ route('pasien.riwayat.index') }}" class="text-[10px] font-bold text-indigo-600 hover:text-indigo-800 uppercase tracking-widest transition-colors">Lihat Semua</a>
+                            <a href="{{ route('pasien.riwayat.index') }}" class="text-[10px] font-bold text-emerald-600 hover:text-emerald-800 uppercase tracking-widest transition-colors">Lihat Semua</a>
                         </div>
                         <div class="p-2">
                             @if($riwayats->isEmpty())
@@ -92,7 +92,7 @@
                                                 <div class="text-sm font-bold text-slate-800">{{ $r->tanggal_rekomendasi->format('d M Y') }}</div>
                                                 <div class="text-[10px] text-slate-400 italic">Berdasarkan profil {{ $r->user->name }}</div>
                                             </div>
-                                            <a href="{{ route('pasien.riwayat.show', $r->id) }}" class="text-xs font-bold text-indigo-600 hover:underline">Detail <i class="fas fa-chevron-right ml-1"></i></a>
+                                            <a href="{{ route('pasien.riwayat.show', $r->id) }}" class="text-xs font-bold text-emerald-600 hover:underline">Detail <i class="fas fa-chevron-right ml-1"></i></a>
                                         </div>
                                     @endforeach
                                 </div>
@@ -105,7 +105,7 @@
                 <div class="space-y-6">
                     {{-- Profil Card --}}
                     <div class="bg-white border border-slate-200 rounded-lg shadow-sm overflow-hidden">
-                        <div class="h-2 bg-indigo-600"></div>
+                        <div class="h-2 bg-emerald-600"></div>
                         <div class="p-6 text-center">
                             <div class="w-20 h-20 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4 text-slate-300">
                                 <i class="fas fa-user text-3xl"></i>
@@ -114,10 +114,10 @@
                             <p class="text-[10px] text-slate-400 uppercase tracking-widest mt-1">Pasien Terdaftar</p>
                             
                             <div class="mt-6 pt-6 border-t border-slate-50 flex justify-center gap-4">
-                                <a href="{{ route('pasien.profil.index') }}" class="p-2 text-slate-400 hover:text-indigo-600 transition-colors" title="Edit Profil">
+                                <a href="{{ route('pasien.profil.index') }}" class="p-2 text-slate-400 hover:text-emerald-600 transition-colors" title="Edit Profil">
                                     <i class="fas fa-cog"></i>
                                 </a>
-                                <a href="{{ route('profile.edit') }}" class="p-2 text-slate-400 hover:text-indigo-600 transition-colors" title="Akun">
+                                <a href="{{ route('profile.edit') }}" class="p-2 text-slate-400 hover:text-emerald-600 transition-colors" title="Akun">
                                     <i class="fas fa-user-shield"></i>
                                 </a>
                             </div>

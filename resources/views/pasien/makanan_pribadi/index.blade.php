@@ -4,7 +4,7 @@
             <h2 class="font-bold text-xl text-slate-800">
                 {{ __('Makanan Pribadi') }}
             </h2>
-            <a href="{{ route('pasien.makanan_pribadi.create') }}" class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 transition duration-150 shadow-sm">
+            <a href="{{ route('pasien.makanan_pribadi.create') }}" class="inline-flex items-center px-4 py-2 bg-emerald-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-emerald-700 transition duration-150 shadow-sm">
                 <i class="fas fa-plus mr-2"></i> Tambah Menu
             </a>
         </div>
@@ -28,7 +28,7 @@
                             </div>
                             <h3 class="text-xl font-bold text-slate-800 mb-2">Belum Ada Menu Pribadi</h3>
                             <p class="text-slate-400 text-sm mb-8">Anda bisa menambahkan menu makanan sendiri yang belum ada di daftar sistem.</p>
-                            <a href="{{ route('pasien.makanan_pribadi.create') }}" class="inline-flex items-center px-6 py-2.5 bg-indigo-600 text-white rounded font-bold text-xs uppercase tracking-widest hover:bg-indigo-700 transition-all">
+                            <a href="{{ route('pasien.makanan_pribadi.create') }}" class="inline-flex items-center px-6 py-2.5 bg-emerald-600 text-white rounded font-bold text-xs uppercase tracking-widest hover:bg-emerald-700 transition-all">
                                 Tambah Menu Sekarang
                             </a>
                         </div>
@@ -60,7 +60,7 @@
                                             </td>
                                             <td class="px-6 py-5 text-right">
                                                 <div class="flex justify-end gap-2">
-                                                    <a href="{{ route('pasien.makanan_pribadi.edit', $makanan) }}" class="p-2 text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors" title="Edit">
+                                                    <a href="{{ route('pasien.makanan_pribadi.edit', $makanan) }}" class="p-2 text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors" title="Edit">
                                                         <i class="fas fa-edit"></i>
                                                     </a>
                                                     <form action="{{ route('pasien.makanan_pribadi.destroy', $makanan) }}" method="POST" class="inline">

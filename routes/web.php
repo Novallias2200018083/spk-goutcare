@@ -63,6 +63,7 @@ Route::middleware('auth')->group(function () {
         // Route Riwayat Rekomendasi
         Route::get('/riwayat', [RiwayatRekomendasiController::class, 'index'])->name('riwayat.index');
         Route::get('/riwayat/{id}', [RiwayatRekomendasiController::class, 'show'])->name('riwayat.show');
+        Route::get('/riwayat/ai-insight/{id}', [App\Http\Controllers\Pasien\AiInsightController::class, 'generate'])->name('riwayat.ai');
 
         // Route Rekomendasi (Engine Profile Matching)
         Route::get('/rekomendasi', [RekomendasiController::class, 'index'])->name('rekomendasi.index');

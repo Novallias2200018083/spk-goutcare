@@ -27,7 +27,11 @@ class RekomendasiController extends Controller
                              ->with('error', 'Silakan isi profil kesehatan Anda terlebih dahulu.');
         }
 
-        return view('pasien.rekomendasi.index', compact('profil'));
+        $makananSistem = Makanan::where('is_user_input', false)->with('nilaiKriterias.kriteria')->get();
+        $makananPribadi = Makanan::where('is_user_input', true)->where('user_id', $user->id)->with('nilaiKriterias.kriteria')->get();
+        $kriterias = Kriteria::orderBy('id')->get();
+
+        return view('pasien.rekomendasi.index', compact('profil', 'makananSistem', 'makananPribadi', 'kriterias'));
     }
 
     public function hitung(Request $request)
@@ -77,13 +81,72 @@ class RekomendasiController extends Controller
                 $targetSkala[$k->id] = $skalaDitemukan ? $skalaDitemukan->nilai_skala : 3; // Default 3 jika diluar range
             }
 
-            // 3. Ambil Alternatif Makanan
-            $makanans = Makanan::where('is_user_input', false)
-                               ->orWhere(function($query) use ($user) {
-                                   $query->where('is_user_input', true)->where('user_id', $user->id);
+            $sumber = $request->input('sumber_makanan', ['sistem']); // default ke sistem jika kosong
+            $makanans = Makanan::where(function($query) use ($user, $sumber) {
+                                   if (in_array('sistem', $sumber)) {
+                                       $query->orWhere('is_user_input', false);
+                                   }
+                                   if (in_array('pribadi', $sumber)) {
+                                       $query->orWhere(function($q) use ($user) {
+                                           $q->where('is_user_input', true)->where('user_id', $user->id);
+                                       });
+                                   }
                                })
                                ->with('nilaiKriterias')
                                ->get();
+
+            // Cek apakah ada modifikasi custom inline table
+            if ($request->has('custom_makanan')) {
+                foreach ($makanans as $key => $makanan) {
+                    if (isset($request->custom_makanan[$makanan->id])) {
+                        $isModified = false;
+                        $inputCustom = $request->custom_makanan[$makanan->id];
+
+                        foreach ($makanan->nilaiKriterias as $nk) {
+                            if (isset($inputCustom[$nk->kriteria_id]) && $inputCustom[$nk->kriteria_id] != $nk->nilai) {
+                                $isModified = true;
+                                break;
+                            }
+                        }
+
+                        if ($isModified) {
+                            if ($makanan->is_user_input == false) {
+                                // Clone sistem ke pribadi
+                                $clonedMakanan = Makanan::create([
+                                    'nama_makanan' => $makanan->nama_makanan . ' (Custom)',
+                                    'deskripsi' => 'Salinan dari sistem dengan nilai dimodifikasi.',
+                                    'is_user_input' => true,
+                                    'user_id' => $user->id,
+                                ]);
+                                foreach ($makanan->nilaiKriterias as $nk) {
+                                    $newVal = isset($inputCustom[$nk->kriteria_id]) ? $inputCustom[$nk->kriteria_id] : $nk->nilai;
+                                    \App\Models\NilaiKriteriaMakanan::create([
+                                        'makanan_id' => $clonedMakanan->id,
+                                        'kriteria_id' => $nk->kriteria_id,
+                                        'nilai' => $newVal,
+                                    ]);
+                                }
+                                // Ganti instance di array agar yang dihitung adalah clone-nya
+                                $clonedMakanan->load('nilaiKriterias');
+                                $makanans[$key] = $clonedMakanan;
+                            } else {
+                                // Update langsung makanan pribadinya
+                                foreach ($makanan->nilaiKriterias as $nk) {
+                                    if (isset($inputCustom[$nk->kriteria_id])) {
+                                        $nk->update(['nilai' => $inputCustom[$nk->kriteria_id]]);
+                                    }
+                                }
+                                $makanan->refresh();
+                            }
+                        }
+                    }
+                }
+            }
+
+            if ($makanans->isEmpty()) {
+                DB::rollBack();
+                return back()->with('error', 'Pilih minimal satu sumber makanan (Sistem / Pribadi) yang memiliki data makanan.');
+            }
 
             $riwayat = RiwayatRekomendasi::create([
                 'user_id' => $user->id,
@@ -131,11 +194,23 @@ class RekomendasiController extends Controller
                 // Pastikan nilai akhir dihitung dengan benar
                 $nilaiAkhir = ($persentaseNcf * $ncf) + ($persentaseNsf * $nsf);
 
-                // Tentukan Status Kelayakan
+                // Tentukan Status Kelayakan berdasarkan Profile Matching
                 $status = 'Kurang Direkomendasikan';
                 if ($nilaiAkhir >= 4.5) $status = 'Sangat Direkomendasikan';
                 elseif ($nilaiAkhir >= 3.8) $status = 'Direkomendasikan';
                 elseif ($nilaiAkhir >= 3.0) $status = 'Cukup Direkomendasikan';
+
+                // Terapkan Filter Medis Absolut (Toleransi Purin)
+                $purinKriteria = $kriterias->where('nama_kriteria', 'Kandungan Purin')->first();
+                if ($purinKriteria) {
+                    $nilaiPurinMakanan = $makanan->nilaiKriterias->where('kriteria_id', $purinKriteria->id)->first();
+                    $purinVal = $nilaiPurinMakanan ? $nilaiPurinMakanan->nilai : 0;
+                    if ($purinVal > $tPurin) {
+                        $status = 'Tidak Direkomendasikan (Bahaya)';
+                        // Kita TETAP menyimpannya dengan nilai akhir aslinya, tidak dihancurkan ke -999
+                        // agar pasien bisa melihat bahwa makanan ini bergizi tapi BAHAYA.
+                    }
+                }
 
                 DetailRiwayatRekomendasi::create([
                     'riwayat_id' => $riwayat->id,

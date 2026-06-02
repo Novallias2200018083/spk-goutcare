@@ -16,7 +16,7 @@
                             </div>
                             <h3 class="text-sm font-bold text-slate-800">Belum Ada Riwayat</h3>
                             <p class="text-xs text-slate-500 mt-1">Anda belum pernah melakukan perhitungan rekomendasi makanan.</p>
-                            <a href="{{ route('pasien.rekomendasi.index') }}" class="mt-6 inline-flex items-center px-4 py-2 bg-indigo-600 text-white rounded text-xs font-bold uppercase tracking-widest hover:bg-indigo-700 transition-all">
+                            <a href="{{ route('pasien.rekomendasi.index') }}" class="mt-6 inline-flex items-center px-4 py-2 bg-emerald-600 text-white rounded text-xs font-bold uppercase tracking-widest hover:bg-emerald-700 transition-all">
                                 Mulai Sekarang
                             </a>
                         </div>
@@ -43,7 +43,7 @@
                                                 </span>
                                             </td>
                                             <td class="px-6 py-4 text-right">
-                                                <a href="{{ route('pasien.riwayat.show', $riwayat->id) }}" class="inline-flex items-center px-3 py-1 bg-indigo-50 text-indigo-600 rounded text-[10px] font-bold uppercase tracking-widest hover:bg-indigo-600 hover:text-white transition-all">
+                                                <a href="{{ route('pasien.riwayat.show', $riwayat->id) }}" class="inline-flex items-center px-3 py-1 bg-emerald-50 text-emerald-600 rounded text-[10px] font-bold uppercase tracking-widest hover:bg-emerald-600 hover:text-white transition-all">
                                                     Lihat Hasil <i class="fas fa-chevron-right ml-2"></i>
                                                 </a>
                                             </td>

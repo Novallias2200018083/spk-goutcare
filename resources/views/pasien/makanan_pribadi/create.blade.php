@@ -25,14 +25,14 @@
                                     <div>
                                         <label for="nama_makanan" class="block text-sm font-semibold text-slate-700 mb-1">Nama Makanan</label>
                                         <input id="nama_makanan" type="text" name="nama_makanan" value="{{ old('nama_makanan') }}" required autofocus placeholder="Contoh: Tempe Goreng"
-                                            class="w-full text-sm p-2.5 rounded border-slate-200 bg-slate-50 focus:bg-white focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 transition-all">
+                                            class="w-full text-sm p-2.5 rounded border-slate-200 bg-slate-50 focus:bg-white focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 transition-all">
                                         <x-input-error :messages="$errors->get('nama_makanan')" class="mt-1" />
                                     </div>
 
                                     <div>
                                         <label for="deskripsi" class="block text-sm font-semibold text-slate-700 mb-1">Deskripsi Singkat</label>
                                         <textarea id="deskripsi" name="deskripsi" rows="3" placeholder="Misal: Dimasak dengan minyak sedikit, per 100gr"
-                                            class="w-full text-sm p-2.5 rounded border-slate-200 bg-slate-50 focus:bg-white focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 transition-all">{{ old('deskripsi') }}</textarea>
+                                            class="w-full text-sm p-2.5 rounded border-slate-200 bg-slate-50 focus:bg-white focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 transition-all">{{ old('deskripsi') }}</textarea>
                                         <x-input-error :messages="$errors->get('deskripsi')" class="mt-1" />
                                     </div>
                                 </div>
@@ -50,7 +50,7 @@
                                                 <span class="text-[9px] font-bold text-slate-400 uppercase tracking-tighter">{{ $kriteria->tipe_faktor }}</span>
                                             </div>
                                             <input id="nilai_{{ $kriteria->id }}" type="number" step="0.01" name="nilai[{{ $kriteria->id }}]" value="{{ old('nilai.' . $kriteria->id) }}" required
-                                                class="w-full text-sm p-2 rounded border-slate-200 bg-white focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 transition-all">
+                                                class="w-full text-sm p-2 rounded border-slate-200 bg-white focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 transition-all">
                                             <x-input-error :messages="$errors->get('nilai.' . $kriteria->id)" class="mt-1" />
                                         </div>
                                     @endforeach
@@ -62,7 +62,7 @@
                             <a href="{{ route('pasien.makanan_pribadi.index') }}" class="px-4 py-2 text-sm font-bold text-slate-500 hover:text-slate-700 transition-colors">
                                 {{ __('Batal') }}
                             </a>
-                            <button type="submit" class="px-6 py-2 bg-indigo-600 text-white rounded font-bold text-xs uppercase tracking-widest hover:bg-indigo-700 transition-colors">
+                            <button type="submit" class="px-6 py-2 bg-emerald-600 text-white rounded font-bold text-xs uppercase tracking-widest hover:bg-emerald-700 transition-colors">
                                 {{ __('Simpan Makanan') }}
                             </button>
                         </div>

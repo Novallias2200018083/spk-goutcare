@@ -4,7 +4,7 @@
             <h2 class="font-bold text-xl text-slate-800">
                 {{ __('Ringkasan Profil Gizi') }}
             </h2>
-            <a href="{{ route('pasien.profil.index') }}" class="text-xs font-bold text-indigo-600 hover:text-indigo-800 uppercase tracking-widest transition-colors">
+            <a href="{{ route('pasien.profil.index') }}" class="text-xs font-bold text-emerald-600 hover:text-emerald-800 uppercase tracking-widest transition-colors">
                 <i class="fas fa-edit mr-1"></i> Edit Profil
             </a>
         </div>
@@ -46,13 +46,13 @@
                         </div>
                     </div>
 
-                    <div class="bg-indigo-600 rounded-lg p-6 text-white shadow-lg shadow-indigo-100">
-                        <h3 class="text-[10px] font-bold text-indigo-200 uppercase tracking-widest mb-4">Batas Purin Harian</h3>
+                    <div class="bg-emerald-600 rounded-lg p-6 text-white shadow-lg shadow-emerald-100">
+                        <h3 class="text-[10px] font-bold text-emerald-200 uppercase tracking-widest mb-4">Batas Purin Harian</h3>
                         <div class="flex items-baseline gap-2">
                             <span class="text-4xl font-bold">{{ $profil->toleransi_purin }}</span>
-                            <span class="text-sm font-medium text-indigo-200">mg / hari</span>
+                            <span class="text-sm font-medium text-emerald-200">mg / hari</span>
                         </div>
-                        <p class="text-[10px] text-indigo-100 mt-4 leading-relaxed italic opacity-80">
+                        <p class="text-[10px] text-emerald-100 mt-4 leading-relaxed italic opacity-80">
                             *Target purin disesuaikan dengan fase {{ $profil->fase_asam_urat }} Anda untuk mencegah kekambuhan.
                         </p>
                     </div>
@@ -77,7 +77,7 @@
                                     <span class="text-2xl font-bold text-slate-800">{{ $profil->kebutuhan_protein }}</span>
                                     <span class="text-xs text-slate-400 font-medium">gram</span>
                                     <div class="mt-3 h-1.5 w-full bg-slate-200 rounded-full overflow-hidden">
-                                        <div class="h-full bg-indigo-500" style="width: 20%"></div>
+                                        <div class="h-full bg-emerald-500" style="width: 20%"></div>
                                     </div>
                                 </div>
                                 {{-- Lemak --}}
@@ -86,7 +86,7 @@
                                     <span class="text-2xl font-bold text-slate-800">{{ $profil->kebutuhan_lemak }}</span>
                                     <span class="text-xs text-slate-400 font-medium">gram</span>
                                     <div class="mt-3 h-1.5 w-full bg-slate-200 rounded-full overflow-hidden">
-                                        <div class="h-full bg-indigo-400" style="width: 25%"></div>
+                                        <div class="h-full bg-emerald-400" style="width: 25%"></div>
                                     </div>
                                 </div>
                                 {{-- Karbo --}}
@@ -95,14 +95,14 @@
                                     <span class="text-2xl font-bold text-slate-800">{{ $profil->kebutuhan_karbohidrat }}</span>
                                     <span class="text-xs text-slate-400 font-medium">gram</span>
                                     <div class="mt-3 h-1.5 w-full bg-slate-200 rounded-full overflow-hidden">
-                                        <div class="h-full bg-indigo-300" style="width: 55%"></div>
+                                        <div class="h-full bg-emerald-300" style="width: 55%"></div>
                                     </div>
                                 </div>
                             </div>
 
-                            <div class="mt-8 p-4 border-l-4 border-indigo-500 bg-indigo-50/50 rounded-r-lg">
-                                <h4 class="text-xs font-bold text-indigo-900 uppercase tracking-widest mb-1">Catatan Nutrisi:</h4>
-                                <p class="text-xs text-indigo-700 leading-relaxed italic">
+                            <div class="mt-8 p-4 border-l-4 border-emerald-500 bg-emerald-50/50 rounded-r-lg">
+                                <h4 class="text-xs font-bold text-emerald-900 uppercase tracking-widest mb-1">Catatan Nutrisi:</h4>
+                                <p class="text-xs text-emerald-700 leading-relaxed italic">
                                     {{ $profil->catatan_tambahan ?: 'Tidak ada catatan medis tambahan.' }}
                                 </p>
                             </div>
@@ -112,7 +112,7 @@
             </div>
 
             <div class="flex justify-center pt-4">
-                <a href="{{ route('pasien.rekomendasi.index') }}" class="px-8 py-3 bg-indigo-600 text-white rounded-md font-bold text-xs uppercase tracking-widest hover:bg-indigo-700 transition-all shadow-md">
+                <a href="{{ route('pasien.rekomendasi.index') }}" class="px-8 py-3 bg-emerald-600 text-white rounded-md font-bold text-xs uppercase tracking-widest hover:bg-emerald-700 transition-all shadow-md">
                     Lanjutkan ke Rekomendasi Makanan <i class="fas fa-arrow-right ml-2"></i>
                 </a>
             </div>

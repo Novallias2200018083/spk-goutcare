@@ -16,11 +16,20 @@ class UserSeeder extends Seeder
             'role' => 'admin',
         ]);
 
-        User::create([
+        $pasien = User::create([
             'name' => 'Pasien A',
             'email' => 'pasien_a@example.com',
             'password' => Hash::make('password'),
             'role' => 'pasien',
+        ]);
+
+        // Berdasarkan Tabel 2.13 Profil Kebutuhan Gizi Ideal / Target (Pak Agus)
+        \App\Models\ProfilPasien::create([
+            'user_id' => $pasien->id,
+            'toleransi_purin' => 90,
+            'kebutuhan_kalori' => 120,
+            'kebutuhan_protein' => 12,
+            'kebutuhan_lemak' => 4,
         ]);
     }
 }
