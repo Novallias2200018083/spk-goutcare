@@ -1,8 +1,16 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-bold text-xl text-slate-800">
-            {{ __('Simulasi Rekomendasi Makanan') }}
-        </h2>
+        <div class="flex items-center gap-3 w-full overflow-hidden">
+            <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600 shadow-inner shrink-0">
+                <i class="fas fa-lightbulb sm:text-lg"></i>
+            </div>
+            <div class="overflow-hidden">
+                <h2 class="font-bold text-lg sm:text-xl text-slate-800 tracking-tight truncate">
+                    Simulasi Rekomendasi
+                </h2>
+                <p class="text-[10px] sm:text-xs text-slate-500 hidden sm:block truncate">Dapatkan rekomendasi makanan terbaik dari Ahli Gizi Virtual.</p>
+            </div>
+        </div>
     </x-slot>
 
     <div class="py-6">
@@ -14,52 +22,87 @@
                         <p class="text-sm text-slate-500 mt-1">Sistem akan melakukan ranking makanan berdasarkan profil gizi Anda.</p>
                     </div>
 
+                    @if(session('error'))
+                        <div class="mb-6 bg-red-50 border-l-4 border-red-500 p-4 rounded">
+                            <div class="flex">
+                                <div class="flex-shrink-0">
+                                    <i class="fas fa-exclamation-circle text-red-500"></i>
+                                </div>
+                                <div class="ml-3">
+                                    <p class="text-sm text-red-700 font-bold">
+                                        {{ session('error') }}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    @endif
+
+                    @if(session('success'))
+                        <div class="mb-6 bg-emerald-50 border-l-4 border-emerald-500 p-4 rounded">
+                            <div class="flex">
+                                <div class="flex-shrink-0">
+                                    <i class="fas fa-check-circle text-emerald-500"></i>
+                                </div>
+                                <div class="ml-3">
+                                    <p class="text-sm text-emerald-700 font-bold">
+                                        {{ session('success') }}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    @endif
+
                     <form method="POST" action="{{ route('pasien.rekomendasi.hitung') }}" x-data="{ showCustom: false }">
                         @csrf
 
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
-                            <div class="p-4 bg-slate-50 border border-slate-100 rounded-lg">
-                                <span class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Target Kalori</span>
-                                <span class="text-xl font-bold text-slate-800">{{ number_format($profil->kebutuhan_kalori) }} <span class="text-xs font-medium text-slate-400">kkal</span></span>
+                        <div class="mb-8 bg-slate-800 p-6 rounded-xl text-white shadow-lg relative overflow-hidden">
+                            <div class="absolute -right-4 -top-10 opacity-10">
+                                <i class="fas fa-brain text-9xl"></i>
                             </div>
-                            <div class="p-4 bg-slate-50 border border-slate-100 rounded-lg">
-                                <span class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Batas Purin</span>
-                                <span class="text-xl font-bold text-slate-800">{{ number_format($profil->toleransi_purin) }} <span class="text-xs font-medium text-slate-400">mg</span></span>
-                            </div>
-                        </div>
+                            <div class="relative z-10">
+                                <h4 class="font-black text-emerald-400 text-lg mb-2"><i class="fas fa-magic mr-2"></i> Rule-Based Target Generation</h4>
+                                <p class="text-sm text-slate-300 mb-6 leading-relaxed">Berdasarkan komputasi sistem Ahli Gizi Virtual, Anda terdeteksi berada pada Fase <b>{{ ucfirst($profil->fase_asam_urat) }}</b> dengan IMT <b>{{ number_format($imt, 1) }} ({{ $statusImt }})</b>. Sistem secara otomatis menetapkan target pencarian makanan Anda sebagai berikut:</p>
+                                
+                                <div class="grid grid-cols-2 md:grid-cols-5 gap-3">
+                                    @foreach($kriterias as $k)
+                                        @php
+                                            $data = $targetData[$k->id];
+                                            $shortName = str_replace(['Kandungan ', 'Kebutuhan '], '', $k->nama_kriteria);
+                                            // Menentukan satuan
+                                            $satuan = 'g';
+                                            if (str_contains(strtolower($k->nama_kriteria), 'kalori')) $satuan = 'kkal';
+                                            elseif (str_contains(strtolower($k->nama_kriteria), 'purin')) $satuan = 'mg';
+                                        @endphp
+                                        <div class="bg-white/10 rounded-lg p-3 border border-white/5 relative group hover:bg-white/20 transition-all cursor-default">
+                                            <div class="text-[10px] text-emerald-400 uppercase tracking-widest mb-1 font-bold">{{ $shortName }} ({{ $k->kode }})</div>
+                                            <div class="font-black text-white text-sm mb-1">Skala {{ $data['skala'] }} ({{ $data['label'] }})</div>
+                                            
+                                            {{-- Nilai Asli (Target Harian) --}}
+                                            <div class="text-[10px] text-white/80 mt-2 border-t border-white/10 pt-2">
+                                                <span class="block opacity-70">Target Harian:</span>
+                                                <span class="font-bold text-emerald-300">{{ $data['nilai_asli'] }} {{ $satuan }}</span>
+                                            </div>
 
-                        <div class="mb-8 p-4 border border-emerald-100 bg-emerald-50/30 rounded-lg flex items-center gap-3">
-                            <input type="checkbox" id="use_custom" x-model="showCustom" class="w-5 h-5 text-emerald-600 rounded border-slate-300 focus:ring-emerald-500">
-                            <label for="use_custom" class="text-sm font-bold text-emerald-900 cursor-pointer">Simulasi dengan nilai custom (sementara)</label>
-                        </div>
+                                            {{-- Alasan Rule-Based --}}
+                                            <div class="text-[9px] text-amber-200/80 mt-1.5 leading-tight">
+                                                <i class="fas fa-info-circle mr-0.5"></i> {{ $data['alasan'] }}
+                                            </div>
 
-                        {{-- Custom Values Section --}}
-                        <div x-show="showCustom" x-transition class="space-y-6 mb-10 p-6 bg-slate-50 border border-slate-200 rounded-lg border-dashed">
-                            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                                <div>
-                                    <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Custom Kalori</label>
-                                    <input type="number" name="custom_kalori" value="{{ $profil->kebutuhan_kalori }}" class="w-full text-sm p-2 rounded border-slate-200 focus:ring-1 focus:ring-emerald-500">
-                                </div>
-                                <div>
-                                    <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Custom Purin</label>
-                                    <input type="number" name="custom_purin" value="{{ $profil->toleransi_purin }}" class="w-full text-sm p-2 rounded border-slate-200 focus:ring-1 focus:ring-emerald-500">
-                                </div>
-                                <div>
-                                    <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Custom Protein</label>
-                                    <input type="number" name="custom_protein" value="{{ $profil->kebutuhan_protein }}" class="w-full text-sm p-2 rounded border-slate-200 focus:ring-1 focus:ring-emerald-500">
-                                </div>
-                                <div>
-                                    <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Custom Lemak</label>
-                                    <input type="number" name="custom_lemak" value="{{ $profil->kebutuhan_lemak }}" class="w-full text-sm p-2 rounded border-slate-200 focus:ring-1 focus:ring-emerald-500">
-                                </div>
-                                <div>
-                                    <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Custom Karbo</label>
-                                    <input type="number" name="custom_karbohidrat" value="{{ $profil->kebutuhan_karbohidrat }}" class="w-full text-sm p-2 rounded border-slate-200 focus:ring-1 focus:ring-emerald-500">
+                                            {{-- Real value info (Scale Boundary) --}}
+                                            <div class="text-[9px] text-emerald-100/40 mt-1 font-mono">
+                                                Rentang Skala: {{ $data['batas_bawah'] }} - {{ $data['batas_atas'] }} {{ $satuan }}
+                                            </div>
+
+                                            {{-- Tooltip for Keterangan --}}
+                                            @if($data['keterangan'])
+                                                <div class="absolute inset-0 bg-slate-900/95 text-xs text-white p-3 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none flex items-center justify-center text-center z-20 shadow-xl border border-slate-700">
+                                                    {{ $data['keterangan'] }}
+                                                </div>
+                                            @endif
+                                        </div>
+                                    @endforeach
                                 </div>
                             </div>
-                            <p class="text-[10px] text-slate-400 italic">
-                                <i class="fas fa-info-circle mr-1"></i> Perubahan nilai di sini hanya untuk simulasi saat ini dan tidak akan merubah database profil Anda.
-                            </p>
                         </div>
 
                         {{-- Sumber Makanan Selection & Details --}}

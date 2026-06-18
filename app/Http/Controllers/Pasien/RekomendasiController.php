@@ -21,17 +21,93 @@ class RekomendasiController extends Controller
         $user = Auth::user();
         $profil = $user->profilPasien;
 
-        // Jika profil belum diisi, arahkan untuk mengisi profil dulu
-        if (!$profil) {
+        // Jika profil belum diisi atau data antropometri tidak lengkap, arahkan untuk mengisi profil dulu
+        if (!$profil || empty($profil->berat_badan) || empty($profil->tinggi_badan) || empty($profil->fase_asam_urat)) {
             return redirect()->route('pasien.profil.index')
-                             ->with('error', 'Silakan isi profil kesehatan Anda terlebih dahulu.');
+                             ->with('error', 'Silakan lengkapi data fisik Anda (Berat Badan, Tinggi Badan, & Fase Asam Urat) terlebih dahulu agar AI dapat menghitung rule-based target Anda.');
         }
 
         $makananSistem = Makanan::where('is_user_input', false)->with('nilaiKriterias.kriteria')->get();
         $makananPribadi = Makanan::where('is_user_input', true)->where('user_id', $user->id)->with('nilaiKriterias.kriteria')->get();
         $kriterias = Kriteria::orderBy('id')->get();
+        $skalas = SkalaKriteria::all();
+        
+        $tinggiMeter = $profil->tinggi_badan / 100;
+        $imt = ($tinggiMeter > 0) ? ($profil->berat_badan / ($tinggiMeter * $tinggiMeter)) : 0;
+        $statusImt = $imt < 18.5 ? 'Kurus' : ($imt >= 25 ? 'Gemuk / Obesitas' : 'Normal');
 
-        return view('pasien.rekomendasi.index', compact('profil', 'makananSistem', 'makananPribadi', 'kriterias'));
+        // Kalkulasi Target Skala dan Range Nilai Asli untuk UI
+        $targetData = [];
+        foreach ($kriterias as $k) {
+            $kName = strtolower($k->nama_kriteria);
+            $skala = 3; // default
+            $label = 'Sedang';
+            $alasan = '';
+
+            if (str_contains($kName, 'purin')) {
+                if (strtolower($profil->fase_asam_urat) == 'akut') { 
+                    $skala = 4; $label = 'Rendah'; 
+                    $alasan = 'Kondisi fase Akut (kambuh).';
+                } else { 
+                    $skala = 3; $label = 'Sedang'; 
+                    $alasan = 'Fase Normal (pemeliharaan).';
+                }
+            } elseif (str_contains($kName, 'kalori')) {
+                if ($imt < 18.5) { 
+                    $skala = 2; $label = 'Tinggi'; 
+                    $alasan = 'IMT Kurus (< 18.5).';
+                } elseif ($imt >= 25) { 
+                    $skala = 4; $label = 'Rendah'; 
+                    $alasan = 'IMT Obesitas (>= 25).';
+                } else { 
+                    $skala = 3; $label = 'Sedang'; 
+                    $alasan = 'IMT Normal.';
+                }
+            } elseif (str_contains($kName, 'lemak')) {
+                if ($imt >= 25) { 
+                    $skala = 4; $label = 'Rendah'; 
+                    $alasan = 'IMT Obesitas (>= 25).';
+                } else { 
+                    $skala = 3; $label = 'Sedang'; 
+                    $alasan = 'IMT Normal/Kurus.';
+                }
+            } elseif (str_contains($kName, 'protein')) {
+                $skala = 3; $label = 'Sedang';
+                $alasan = 'Kebutuhan standar otot.';
+            } elseif (str_contains($kName, 'karbohidrat')) {
+                $skala = 3; $label = 'Sedang';
+                $alasan = 'Kebutuhan standar kalori.';
+            }
+
+            // Nilai asli harian dari profil pasien
+            $nilaiAsli = 0;
+            if (str_contains($kName, 'purin')) {
+                $nilaiAsli = $profil->toleransi_purin;
+            } elseif (str_contains($kName, 'kalori')) {
+                $nilaiAsli = $profil->kebutuhan_kalori;
+            } elseif (str_contains($kName, 'lemak')) {
+                $nilaiAsli = $profil->kebutuhan_lemak;
+            } elseif (str_contains($kName, 'protein')) {
+                $nilaiAsli = $profil->kebutuhan_protein;
+            } elseif (str_contains($kName, 'karbohidrat')) {
+                $nilaiAsli = $profil->kebutuhan_karbohidrat;
+            }
+
+            // Cari batas bawah dan batas atas dari tabel skala_kriteria
+            $skalaKriteria = $skalas->where('kriteria_id', $k->id)->where('nilai_skala', $skala)->first();
+            
+            $targetData[$k->id] = [
+                'skala' => $skala,
+                'label' => $label,
+                'alasan' => $alasan,
+                'nilai_asli' => $nilaiAsli,
+                'batas_bawah' => $skalaKriteria ? $skalaKriteria->batas_bawah : 0,
+                'batas_atas' => $skalaKriteria ? $skalaKriteria->batas_atas : 0,
+                'keterangan' => $skalaKriteria ? $skalaKriteria->keterangan : ''
+            ];
+        }
+
+        return view('pasien.rekomendasi.index', compact('profil', 'makananSistem', 'makananPribadi', 'kriterias', 'imt', 'statusImt', 'targetData'));
     }
 
     public function hitung(Request $request)
@@ -39,8 +115,8 @@ class RekomendasiController extends Controller
         $user = Auth::user();
         $profil = $user->profilPasien;
 
-        if (!$profil) {
-            return redirect()->route('pasien.profil.index')->with('error', 'Isi profil terlebih dahulu.');
+        if (!$profil || empty($profil->berat_badan) || empty($profil->tinggi_badan) || empty($profil->fase_asam_urat)) {
+            return redirect()->route('pasien.profil.index')->with('error', 'Silakan lengkapi data fisik Anda terlebih dahulu.');
         }
 
         DB::beginTransaction();
@@ -54,31 +130,37 @@ class RekomendasiController extends Controller
             $persentaseNcf = (Pengaturan::where('nama_pengaturan', 'persentase_ncf')->value('nilai') ?? 60) / 100;
             $persentaseNsf = (Pengaturan::where('nama_pengaturan', 'persentase_nsf')->value('nilai') ?? 40) / 100;
 
-            // 2. Tentukan Skala Target Pasien (Berdasarkan Profil atau Custom Input)
+            // 2. Tentukan Skala Target Pasien (Berbasis Aturan Ahli / Rule-Based Logic)
             $targetSkala = [];
             
-            $tPurin = $request->custom_purin ?? $profil->toleransi_purin;
-            $tKalori = $request->custom_kalori ?? $profil->kebutuhan_kalori;
-            $tProtein = $request->custom_protein ?? $profil->kebutuhan_protein;
-            $tLemak = $request->custom_lemak ?? $profil->kebutuhan_lemak;
-            $tKarbo = $request->custom_karbohidrat ?? $profil->kebutuhan_karbohidrat;
-
+            // Hitung IMT (Indeks Massa Tubuh)
+            $tinggiMeter = $profil->tinggi_badan / 100;
+            $imt = ($tinggiMeter > 0) ? ($profil->berat_badan / ($tinggiMeter * $tinggiMeter)) : 0;
+            
             foreach ($kriterias as $k) {
-                $val = 0;
                 $kName = strtolower($k->nama_kriteria);
+                $skala = 3; // Default Skala (3 = Sedang)
                 
-                if (str_contains($kName, 'purin')) $val = $tPurin;
-                elseif (str_contains($kName, 'kalori')) $val = $tKalori;
-                elseif (str_contains($kName, 'protein')) $val = $tProtein;
-                elseif (str_contains($kName, 'lemak')) $val = $tLemak;
-                elseif (str_contains($kName, 'karbohidrat')) $val = $tKarbo;
-
-                // Cari masuk ke skala mana (Gunakan filter untuk menangani desimal)
-                $skalaDitemukan = $skalas->where('kriteria_id', $k->id)
-                    ->filter(fn($s) => $val >= $s->batas_bawah && $val <= $s->batas_atas)
-                    ->first();
+                if (str_contains($kName, 'purin')) {
+                    // Aturan C1: Purin -> Fase Akut = Rendah (4), Fase Normal = Sedang (3)
+                    $skala = (strtolower($profil->fase_asam_urat) == 'akut') ? 4 : 3;
+                } elseif (str_contains($kName, 'kalori')) {
+                    // Aturan C2: Kalori -> IMT < 18.5 = Tinggi (2), IMT >= 25 = Rendah (4), Normal = Sedang (3)
+                    if ($imt < 18.5) $skala = 2;
+                    elseif ($imt >= 25) $skala = 4;
+                    else $skala = 3;
+                } elseif (str_contains($kName, 'lemak')) {
+                    // Aturan C3: Lemak -> IMT >= 25 = Rendah (4), Normal/Kurus = Sedang (3)
+                    $skala = ($imt >= 25) ? 4 : 3;
+                } elseif (str_contains($kName, 'protein')) {
+                    // Aturan C4: Protein -> Sedang (3) untuk pemeliharaan otot
+                    $skala = 3;
+                } elseif (str_contains($kName, 'karbohidrat')) {
+                    // Aturan C5: Karbohidrat -> Sedang (3) sebagai pengganti kalori lemak
+                    $skala = 3;
+                }
                 
-                $targetSkala[$k->id] = $skalaDitemukan ? $skalaDitemukan->nilai_skala : 3; // Default 3 jika diluar range
+                $targetSkala[$k->id] = $skala;
             }
 
             $sumber = $request->input('sumber_makanan', ['sistem']); // default ke sistem jika kosong
@@ -170,8 +252,8 @@ class RekomendasiController extends Controller
                         ->first();
                     $skalaMakanan = $skalaMakananDitemukan ? $skalaMakananDitemukan->nilai_skala : 3;
 
-                    // Hitung GAP (Skala Makanan - Skala Target)
-                    $gap = (int)$skalaMakanan - (int)$targetSkala[$k->id];
+                    // Hitung GAP (Skala Target - Skala Makanan) berdasarkan permintaan user
+                    $gap = (int)$targetSkala[$k->id] - (int)$skalaMakanan;
 
                     // Cari Bobot GAP
                     $bobot = $bobotGaps->where('selisih_gap', $gap)->first();
@@ -200,7 +282,9 @@ class RekomendasiController extends Controller
                 elseif ($nilaiAkhir >= 3.8) $status = 'Direkomendasikan';
                 elseif ($nilaiAkhir >= 3.0) $status = 'Cukup Direkomendasikan';
 
-                // Terapkan Filter Medis Absolut (Toleransi Purin)
+                // Terapkan Filter Medis Absolut (Toleransi Purin per Porsi)
+                // Asumsi standar 3x makan sehari untuk porsi batas bahaya
+                $tPurin = $profil->toleransi_purin / 3;
                 $purinKriteria = $kriterias->where('nama_kriteria', 'Kandungan Purin')->first();
                 if ($purinKriteria) {
                     $nilaiPurinMakanan = $makanan->nilaiKriterias->where('kriteria_id', $purinKriteria->id)->first();

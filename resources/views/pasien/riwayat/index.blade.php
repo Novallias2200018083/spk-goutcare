@@ -1,8 +1,16 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-bold text-xl text-slate-800">
-            {{ __('Riwayat Rekomendasi') }}
-        </h2>
+        <div class="flex items-center gap-3 w-full overflow-hidden">
+            <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600 shadow-inner shrink-0">
+                <i class="fas fa-history sm:text-lg"></i>
+            </div>
+            <div class="overflow-hidden">
+                <h2 class="font-bold text-lg sm:text-xl text-slate-800 tracking-tight truncate">
+                    Riwayat Rekomendasi
+                </h2>
+                <p class="text-[10px] sm:text-xs text-slate-500 hidden sm:block truncate">Arsip hasil simulasi perhitungan diet Anda sebelumnya.</p>
+            </div>
+        </div>
     </x-slot>
 
     <div class="py-6">

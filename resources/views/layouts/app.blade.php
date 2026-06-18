@@ -33,34 +33,34 @@
             <div class="relative flex flex-col flex-1 overflow-y-auto overflow-x-hidden bg-[#F8FAFC]">
                 
                 {{-- Top Header --}}
-                <header class="sticky top-0 bg-white border-b border-slate-200 z-30 py-3">
+                <header class="sticky top-0 bg-white/80 backdrop-blur-lg border-b border-slate-200/60 z-30 py-2 sm:py-3 shadow-sm transition-all">
                     <div class="px-4 sm:px-6 lg:px-8">
-                        <div class="flex items-center justify-between h-10">
+                        <div class="flex items-center justify-between h-12 sm:h-14">
                             
                             {{-- Mobile Hamburger --}}
-                            <div class="flex lg:hidden">
-                                <button @click.stop="sidebarOpen = !sidebarOpen" class="text-slate-500 hover:text-slate-600 focus:outline-none">
-                                    <i class="fas fa-bars text-xl"></i>
+                            <div class="flex lg:hidden mr-4">
+                                <button @click.stop="sidebarOpen = !sidebarOpen" class="w-10 h-10 flex items-center justify-center rounded-xl bg-slate-50 text-slate-600 border border-slate-200 shadow-sm hover:bg-emerald-50 hover:text-emerald-600 hover:border-emerald-200 focus:outline-none transition-all">
+                                    <i class="fas fa-bars text-lg"></i>
                                 </button>
                             </div>
 
                             {{-- Header Left & Center --}}
-                            <div class="flex-1 flex items-center h-full px-4 overflow-hidden">
+                            <div class="flex-1 flex items-center h-full overflow-hidden">
                                 @isset($header)
-                                    <div class="w-full flex items-center justify-between">
+                                    <div class="w-full flex items-center">
                                         {{ $header }}
                                     </div>
                                 @endisset
                             </div>
 
                             {{-- Header Right --}}
-                            <div class="flex items-center space-x-5">
+                            <div class="flex items-center space-x-4 pl-4">
                                 @auth
-                                    <div class="flex flex-col items-end mr-1 hidden sm:flex">
-                                        <span class="text-xs font-semibold text-slate-800">{{ Auth::user()->name }}</span>
-                                        <span class="text-[9px] font-bold uppercase text-slate-400 tracking-widest">{{ Auth::user()->role }}</span>
+                                    <div class="flex flex-col items-end hidden sm:flex">
+                                        <span class="text-[13px] font-bold text-slate-800 leading-tight">{{ Auth::user()->name }}</span>
+                                        <span class="text-[9px] font-extrabold uppercase text-emerald-500 tracking-widest">{{ Auth::user()->role }}</span>
                                     </div>
-                                    <div class="h-9 w-9 rounded-lg bg-slate-100 flex items-center justify-center text-slate-600 font-bold border border-slate-200">
+                                    <div class="h-10 w-10 sm:h-11 sm:w-11 rounded-xl bg-gradient-to-tr from-emerald-500 to-teal-400 flex items-center justify-center text-white font-bold shadow-lg shadow-emerald-500/30 border border-emerald-400/50 flex-shrink-0">
                                         {{ substr(Auth::user()->name, 0, 1) }}
                                     </div>
                                 @endauth
@@ -70,7 +70,7 @@
                     </div>
                 </header>
 
-                <main class="p-6 lg:p-10">
+                <main class="p-6 lg:p-10 pb-24 lg:pb-10">
                     <div class="max-w-7xl mx-auto">
                         {{ $slot }}
                     </div>

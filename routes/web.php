@@ -97,6 +97,7 @@ Route::middleware('auth')->group(function () {
         // Route Laporan Rekomendasi
         Route::get('/laporan', [LaporanController::class, 'index'])->name('laporan.index');
         Route::get('/laporan/cetak', [LaporanController::class, 'cetak'])->name('laporan.cetak');
+        Route::get('/laporan/{id}', [LaporanController::class, 'show'])->name('laporan.show');
     });
 
     // --- Redirect setelah login (sebagai fallback atau initial dashboard) ---

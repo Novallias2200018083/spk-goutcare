@@ -1,8 +1,16 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-bold text-4xl text-gray-800 leading-tight">
-            {{ __('Detail Rekomendasi') }}
-        </h2>
+        <div class="flex items-center gap-3 w-full">
+            <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600 shadow-inner shrink-0">
+                <i class="fas fa-info-circle sm:text-lg"></i>
+            </div>
+            <div class="overflow-hidden">
+                <h2 class="font-bold text-lg sm:text-xl text-slate-800 tracking-tight truncate">
+                    Detail Rekomendasi
+                </h2>
+                <p class="text-[10px] sm:text-xs text-slate-500 hidden sm:block truncate">Penjelasan komprehensif nilai gizi dan status kelayakan.</p>
+            </div>
+        </div>
     </x-slot>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">

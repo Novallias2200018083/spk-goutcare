@@ -1,12 +1,23 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex justify-between items-center w-full">
-            <h2 class="font-bold text-xl text-slate-800">
-                {{ __('Hasil Rekomendasi GoutCare') }}
-            </h2>
-            <div class="text-right">
-                <span class="block text-[10px] text-slate-400 font-bold uppercase tracking-widest leading-none">Dihitung Pada</span>
-                <span class="text-xs font-bold text-slate-700">{{ $riwayat->tanggal_rekomendasi->format('d M Y, H:i') }} WIB</span>
+        <div class="flex justify-between items-center w-full gap-3">
+            <div class="flex items-center gap-3 overflow-hidden">
+                <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600 shadow-inner shrink-0">
+                    <i class="fas fa-file-medical-alt sm:text-lg"></i>
+                </div>
+                <div class="overflow-hidden">
+                    <h2 class="font-bold text-lg sm:text-xl text-slate-800 tracking-tight truncate">
+                        Hasil Rekomendasi
+                    </h2>
+                    <p class="text-[10px] sm:text-xs text-slate-500 hidden sm:block truncate">Detail simulasi gizi GoutCare Anda.</p>
+                </div>
+            </div>
+            <div class="shrink-0 text-right hidden sm:block">
+                <span class="block text-[10px] text-slate-400 font-bold uppercase tracking-widest leading-none mb-1">Dihitung Pada</span>
+                <span class="text-xs font-bold text-slate-700 bg-slate-100 px-2 py-1 rounded">{{ $riwayat->tanggal_rekomendasi->format('d M Y, H:i') }} WIB</span>
+            </div>
+            <div class="shrink-0 text-right sm:hidden">
+                <span class="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-1.5 rounded border border-emerald-100">{{ $riwayat->tanggal_rekomendasi->format('d M') }}</span>
             </div>
         </div>
     </x-slot>
@@ -35,10 +46,10 @@
             {{-- Alpine Tab Wrapper --}}
             <div x-data="{ tabFilter: 'semua' }">
                 {{-- Tabs Filter --}}
-                <div class="flex flex-wrap justify-center md:justify-start gap-2 border-b border-slate-200 mb-6 pb-4">
-                    <button @click="tabFilter = 'semua'" :class="tabFilter === 'semua' ? 'bg-slate-800 text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'" class="px-4 py-2 rounded-lg text-xs font-bold transition-colors uppercase tracking-widest"><i class="fas fa-list mr-1"></i> Semua Peringkat</button>
-                    <button @click="tabFilter = 'aman'" :class="tabFilter === 'aman' ? 'bg-emerald-600 text-white' : 'bg-emerald-50 text-emerald-700 hover:bg-emerald-100'" class="px-4 py-2 rounded-lg text-xs font-bold transition-colors uppercase tracking-widest"><i class="fas fa-check-circle mr-1"></i> Aman Dikonsumsi</button>
-                    <button @click="tabFilter = 'bahaya'" :class="tabFilter === 'bahaya' ? 'bg-rose-600 text-white' : 'bg-rose-50 text-rose-700 hover:bg-rose-100'" class="px-4 py-2 rounded-lg text-xs font-bold transition-colors uppercase tracking-widest"><i class="fas fa-exclamation-triangle mr-1"></i> Bahaya (Purin Tinggi)</button>
+                <div class="flex overflow-x-auto pb-4 mb-6 border-b border-slate-200 gap-2 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+                    <button @click="tabFilter = 'semua'" :class="tabFilter === 'semua' ? 'bg-slate-800 text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'" class="shrink-0 whitespace-nowrap px-4 py-2 rounded-lg text-[10px] sm:text-xs font-bold transition-colors uppercase tracking-widest"><i class="fas fa-list sm:mr-1"></i> Semua Peringkat</button>
+                    <button @click="tabFilter = 'aman'" :class="tabFilter === 'aman' ? 'bg-emerald-600 text-white' : 'bg-emerald-50 text-emerald-700 hover:bg-emerald-100'" class="shrink-0 whitespace-nowrap px-4 py-2 rounded-lg text-[10px] sm:text-xs font-bold transition-colors uppercase tracking-widest"><i class="fas fa-check-circle sm:mr-1"></i> Aman Dikonsumsi</button>
+                    <button @click="tabFilter = 'bahaya'" :class="tabFilter === 'bahaya' ? 'bg-rose-600 text-white' : 'bg-rose-50 text-rose-700 hover:bg-rose-100'" class="shrink-0 whitespace-nowrap px-4 py-2 rounded-lg text-[10px] sm:text-xs font-bold transition-colors uppercase tracking-widest"><i class="fas fa-exclamation-triangle sm:mr-1"></i> Bahaya</button>
                 </div>
 
                 {{-- Ranking List --}}

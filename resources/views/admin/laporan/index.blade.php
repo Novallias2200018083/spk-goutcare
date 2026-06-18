@@ -87,7 +87,7 @@
                                                 </span>
                                             </td>
                                             <td class="px-6 py-4 text-right">
-                                                <a href="{{ route('pasien.riwayat.show', $laporan->id) }}" class="text-indigo-600 hover:text-indigo-900 font-bold text-xs uppercase tracking-widest">
+                                                <a href="{{ route('admin.laporan.show', $laporan->id) }}" class="text-indigo-600 hover:text-indigo-900 font-bold text-xs uppercase tracking-widest">
                                                     Detail &rarr;
                                                 </a>
                                             </td>

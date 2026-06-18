@@ -1,11 +1,19 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex justify-between items-center w-full">
-            <h2 class="font-bold text-xl text-slate-800">
-                {{ __('Makanan Pribadi') }}
-            </h2>
-            <a href="{{ route('pasien.makanan_pribadi.create') }}" class="inline-flex items-center px-4 py-2 bg-emerald-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-emerald-700 transition duration-150 shadow-sm">
-                <i class="fas fa-plus mr-2"></i> Tambah Menu
+        <div class="flex justify-between items-center w-full gap-3">
+            <div class="flex items-center gap-3 overflow-hidden">
+                <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600 shadow-inner shrink-0">
+                    <i class="fas fa-leaf sm:text-lg"></i>
+                </div>
+                <div class="overflow-hidden">
+                    <h2 class="font-bold text-lg sm:text-xl text-slate-800 tracking-tight truncate">
+                        Makanan Saya
+                    </h2>
+                    <p class="text-[10px] sm:text-xs text-slate-500 hidden sm:block truncate">Koleksi menu makanan khusus yang Anda daftarkan sendiri.</p>
+                </div>
+            </div>
+            <a href="{{ route('pasien.makanan_pribadi.create') }}" class="shrink-0 inline-flex items-center justify-center w-8 h-8 sm:w-auto sm:h-auto sm:px-4 sm:py-2 bg-gradient-to-r from-emerald-500 to-emerald-600 rounded-full font-bold text-[10px] sm:text-xs text-white uppercase tracking-widest hover:from-emerald-600 hover:to-emerald-700 transition duration-150 shadow-md shadow-emerald-500/20">
+                <i class="fas fa-plus sm:mr-2"></i> <span class="hidden sm:inline">Tambah Menu</span>
             </a>
         </div>
     </x-slot>

@@ -1,11 +1,19 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex justify-between items-center w-full">
-            <h2 class="font-bold text-xl text-slate-800">
-                {{ __('Ringkasan Profil Gizi') }}
-            </h2>
-            <a href="{{ route('pasien.profil.index') }}" class="text-xs font-bold text-emerald-600 hover:text-emerald-800 uppercase tracking-widest transition-colors">
-                <i class="fas fa-edit mr-1"></i> Edit Profil
+        <div class="flex justify-between items-center w-full gap-3">
+            <div class="flex items-center gap-3 overflow-hidden">
+                <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600 shadow-inner shrink-0">
+                    <i class="fas fa-user-circle sm:text-lg"></i>
+                </div>
+                <div class="overflow-hidden">
+                    <h2 class="font-bold text-lg sm:text-xl text-slate-800 tracking-tight truncate">
+                        Profil Kesehatan
+                    </h2>
+                    <p class="text-[10px] sm:text-xs text-slate-500 hidden sm:block truncate">Kelola data antropometri dan riwayat klinis Anda.</p>
+                </div>
+            </div>
+            <a href="{{ route('pasien.profil.index') }}" class="shrink-0 inline-flex items-center justify-center w-8 h-8 sm:w-auto sm:h-auto sm:px-4 sm:py-2 bg-emerald-50 text-emerald-700 rounded-full text-[10px] sm:text-xs font-bold uppercase tracking-widest hover:bg-emerald-100 transition-colors shadow-sm border border-emerald-100">
+                <i class="fas fa-edit sm:mr-2"></i> <span class="hidden sm:inline">Edit Data</span>
             </a>
         </div>
     </x-slot>

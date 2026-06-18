@@ -48,4 +48,42 @@ class LaporanController extends Controller
         // Kita akan menggunakan view khusus cetak yang bersih dari sidebar/navbar
         return view('admin.laporan.cetak', compact('laporans', 'tanggal_awal', 'tanggal_akhir'));
     }
+
+    public function show($id)
+    {
+        $riwayat = RiwayatRekomendasi::with(['user.profilPasien', 'detailRiwayats.makanan.nilaiKriterias'])->findOrFail($id);
+        
+        $profil = $riwayat->user->profilPasien;
+        
+        // Data Master untuk perhitungan ulang GAP demi display
+        $kriterias = \App\Models\Kriteria::all();
+        $skalas = \App\Models\SkalaKriteria::all();
+        $bobotGaps = \App\Models\BobotGap::all();
+        
+        // Tentukan Target Skala (Re-calculate based on saved profile)
+        $targetSkala = [];
+        $tinggiMeter = $profil->tinggi_badan / 100;
+        $imt = ($tinggiMeter > 0) ? ($profil->berat_badan / ($tinggiMeter * $tinggiMeter)) : 0;
+        
+        foreach ($kriterias as $k) {
+            $kName = strtolower($k->nama_kriteria);
+            $skala = 3;
+            if (str_contains($kName, 'purin')) {
+                $skala = (strtolower($profil->fase_asam_urat) == 'akut') ? 4 : 3;
+            } elseif (str_contains($kName, 'kalori')) {
+                if ($imt < 18.5) $skala = 2;
+                elseif ($imt >= 25) $skala = 4;
+                else $skala = 3;
+            } elseif (str_contains($kName, 'lemak')) {
+                $skala = ($imt >= 25) ? 4 : 3;
+            } elseif (str_contains($kName, 'protein')) {
+                $skala = 3;
+            } elseif (str_contains($kName, 'karbohidrat')) {
+                $skala = 3;
+            }
+            $targetSkala[$k->id] = $skala;
+        }
+
+        return view('admin.laporan.show', compact('riwayat', 'profil', 'kriterias', 'skalas', 'bobotGaps', 'targetSkala', 'imt'));
+    }
 }

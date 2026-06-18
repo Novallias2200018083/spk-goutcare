@@ -1,12 +1,15 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex items-center gap-4">
-            <a href="{{ route('pasien.makanan_pribadi.index') }}" class="text-slate-400 hover:text-slate-600 transition-colors">
-                <i class="fas fa-arrow-left"></i>
+        <div class="flex items-center gap-3 w-full overflow-hidden">
+            <a href="{{ route('pasien.makanan_pribadi.index') }}" class="shrink-0 w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 hover:bg-slate-200 hover:text-slate-700 transition-colors shadow-inner">
+                <i class="fas fa-arrow-left sm:text-lg"></i>
             </a>
-            <h2 class="font-bold text-2xl text-slate-800">
-                {{ __('Tambah Makanan Pribadi') }}
-            </h2>
+            <div class="overflow-hidden">
+                <h2 class="font-bold text-lg sm:text-xl text-slate-800 tracking-tight truncate">
+                    Tambah Makanan Pribadi
+                </h2>
+                <p class="text-[10px] sm:text-xs text-slate-500 hidden sm:block truncate">Isi formulir di bawah ini untuk menambahkan menu baru.</p>
+            </div>
         </div>
     </x-slot>
 

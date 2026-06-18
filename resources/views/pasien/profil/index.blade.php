@@ -1,8 +1,21 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-bold text-xl text-slate-800">
-            {{ __('Profil Kesehatan & Gizi') }}
-        </h2>
+        <div class="flex justify-between items-center w-full">
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600 shadow-inner shrink-0">
+                    <i class="fas fa-user-edit sm:text-lg"></i>
+                </div>
+                <div>
+                    <h2 class="font-bold text-lg sm:text-xl text-slate-800 tracking-tight">
+                        Edit Profil Kesehatan
+                    </h2>
+                    <p class="text-[10px] sm:text-xs text-slate-500 hidden sm:block">Perbarui data kesehatan untuk perhitungan gizi yang akurat.</p>
+                </div>
+            </div>
+            <a href="{{ route('pasien.profil.show') }}" class="inline-flex items-center px-3 py-1.5 sm:px-4 sm:py-2 bg-slate-50 text-slate-600 rounded-full text-[10px] sm:text-xs font-bold uppercase tracking-widest hover:bg-slate-100 transition-colors shadow-sm border border-slate-200">
+                <i class="fas fa-arrow-left sm:mr-2"></i> <span class="hidden sm:inline">Kembali</span>
+            </a>
+        </div>
     </x-slot>
 
     <div class="py-6">
@@ -13,6 +26,36 @@
                         <h3 class="text-lg font-bold text-slate-800">Lengkapi Data Diri</h3>
                         <p class="text-sm text-slate-500 mt-1">Informasi ini diperlukan untuk menghitung kebutuhan nutrisi harian Anda secara akurat.</p>
                     </div>
+
+                    @if(session('error'))
+                        <div class="mb-6 bg-red-50 border-l-4 border-red-500 p-4 rounded">
+                            <div class="flex">
+                                <div class="flex-shrink-0">
+                                    <i class="fas fa-exclamation-circle text-red-500"></i>
+                                </div>
+                                <div class="ml-3">
+                                    <p class="text-sm text-red-700 font-bold">
+                                        {{ session('error') }}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    @endif
+
+                    @if(session('success'))
+                        <div class="mb-6 bg-emerald-50 border-l-4 border-emerald-500 p-4 rounded">
+                            <div class="flex">
+                                <div class="flex-shrink-0">
+                                    <i class="fas fa-check-circle text-emerald-500"></i>
+                                </div>
+                                <div class="ml-3">
+                                    <p class="text-sm text-emerald-700 font-bold">
+                                        {{ session('success') }}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    @endif
 
                     <form method="POST" action="{{ route('pasien.profil.store') }}" x-data="{ metode: '{{ $profil->metode_input ?? 'otomatis' }}' }">
                         @csrf
@@ -134,7 +177,7 @@
                         </div>
 
                         <div class="mt-10 pt-6 border-t border-slate-100 flex justify-end">
-                            <button type="submit" class="px-8 py-2.5 bg-indigo-600 text-white rounded font-bold text-xs uppercase tracking-widest hover:bg-indigo-700 transition-all shadow-sm">
+                            <button type="submit" class="px-8 py-2.5 bg-emerald-600 text-white rounded font-bold text-xs uppercase tracking-widest hover:bg-emerald-700 transition-all shadow-sm">
                                 {{ __('Simpan & Hitung Gizi') }}
                             </button>
                         </div>

@@ -17,6 +17,14 @@ class PasienDashboardController extends Controller
         // Mengambil 5 riwayat rekomendasi terakhir
         $riwayats = $user->riwayatRekomendasis()->latest()->take(5)->get();
 
-        return view('pasien.dashboard', compact('profil', 'riwayats'));
+        // Mengambil detail rekomendasi terbaik dari riwayat terbaru
+        $latestRiwayat = $user->riwayatRekomendasis()->with(['detailRiwayats.makanan'])->latest()->first();
+        $rekomendasiTerbaik = $latestRiwayat ? $latestRiwayat->detailRiwayats()
+            ->whereIn('status_kelayakan', ['Sangat Direkomendasikan', 'Direkomendasikan', 'Cukup Direkomendasikan'])
+            ->orderBy('nilai_akhir', 'desc')
+            ->take(5)
+            ->get() : collect();
+
+        return view('pasien.dashboard', compact('profil', 'riwayats', 'rekomendasiTerbaik'));
     }
 }
