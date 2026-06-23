@@ -18,13 +18,13 @@
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
                 <div class="bg-white border border-slate-200 p-6 rounded-lg shadow-sm">
                     <div class="flex items-center justify-between mb-4">
-                        <div class="w-10 h-10 bg-blue-50 text-blue-600 rounded flex items-center justify-center">
+                        <div class="w-10 h-10 bg-emerald-50 text-emerald-600 rounded flex items-center justify-center">
                             <i class="fas fa-users text-lg"></i>
                         </div>
                         <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Pasien</span>
                     </div>
                     <div class="text-3xl font-bold text-slate-800">{{ $totalPasien }}</div>
-                    <a href="{{ route('admin.pengguna.index') }}" class="text-xs font-semibold text-blue-600 hover:underline mt-4 block">Lihat Detail &rarr;</a>
+                    <a href="{{ route('admin.pengguna.index') }}" class="text-xs font-semibold text-emerald-600 hover:underline mt-4 block">Lihat Detail &rarr;</a>
                 </div>
 
                 <div class="bg-white border border-slate-200 p-6 rounded-lg shadow-sm">
@@ -51,13 +51,13 @@
 
                 <div class="bg-white border border-slate-200 p-6 rounded-lg shadow-sm">
                     <div class="flex items-center justify-between mb-4">
-                        <div class="w-10 h-10 bg-purple-50 text-purple-600 rounded flex items-center justify-center">
+                        <div class="w-10 h-10 bg-emerald-50 text-emerald-600 rounded flex items-center justify-center">
                             <i class="fas fa-file-alt text-lg"></i>
                         </div>
                         <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Laporan</span>
                     </div>
                     <div class="text-3xl font-bold text-slate-800">{{ $totalRekomendasi }}</div>
-                    <a href="{{ route('admin.laporan.index') }}" class="text-xs font-semibold text-purple-600 hover:underline mt-4 block">Buka Laporan &rarr;</a>
+                    <a href="{{ route('admin.laporan.index') }}" class="text-xs font-semibold text-emerald-600 hover:underline mt-4 block">Buka Laporan &rarr;</a>
                 </div>
             </div>
 
@@ -96,14 +96,14 @@
                     </div>
                 </div>
 
-                <div class="bg-indigo-600 rounded-lg p-6 text-white">
+                <div class="bg-emerald-600 rounded-lg p-6 text-white">
                     <h4 class="text-lg font-bold mb-4">Status Sistem</h4>
                     <div class="space-y-4">
-                        <div class="flex items-center justify-between text-sm border-b border-indigo-500 pb-2">
+                        <div class="flex items-center justify-between text-sm border-b border-emerald-500 pb-2">
                             <span>Metode SPK</span>
                             <span class="font-bold">Profile Matching</span>
                         </div>
-                        <div class="flex items-center justify-between text-sm border-b border-indigo-500 pb-2">
+                        <div class="flex items-center justify-between text-sm border-b border-emerald-500 pb-2">
                             <span>Status Database</span>
                             <span class="font-bold text-emerald-300">Aktif</span>
                         </div>

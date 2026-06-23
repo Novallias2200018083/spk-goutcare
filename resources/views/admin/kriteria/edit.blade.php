@@ -22,19 +22,19 @@
                             <div>
                                 <label for="nama_kriteria" class="block text-sm font-semibold text-slate-700 mb-1">Nama Kriteria</label>
                                 <input id="nama_kriteria" type="text" name="nama_kriteria" value="{{ old('nama_kriteria', $kriteria->nama_kriteria) }}" required autofocus
-                                    class="w-full text-sm p-2.5 rounded border-slate-200 bg-slate-50 focus:bg-white focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 transition-all">
+                                    class="w-full text-sm p-2.5 rounded border-slate-200 bg-slate-50 focus:bg-white focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 transition-all">
                                 <x-input-error :messages="$errors->get('nama_kriteria')" class="mt-1" />
                             </div>
 
                             <div>
                                 <label class="block text-sm font-semibold text-slate-700 mb-2">Tipe Faktor (Profile Matching)</label>
                                 <div class="grid grid-cols-2 gap-4">
-                                    <label class="relative flex flex-col p-4 border border-slate-200 rounded cursor-pointer hover:bg-slate-50 transition-colors has-[:checked]:border-indigo-600 has-[:checked]:bg-indigo-50">
+                                    <label class="relative flex flex-col p-4 border border-slate-200 rounded cursor-pointer hover:bg-slate-50 transition-colors has-[:checked]:border-emerald-600 has-[:checked]:bg-emerald-50">
                                         <input type="radio" name="tipe_faktor" value="Core" class="hidden" required {{ old('tipe_faktor', $kriteria->tipe_faktor) == 'Core' ? 'checked' : '' }}>
                                         <span class="text-sm font-bold text-slate-800">Core Factor</span>
                                         <span class="text-[10px] text-slate-500 mt-1">Faktor utama penilaian.</span>
                                     </label>
-                                    <label class="relative flex flex-col p-4 border border-slate-200 rounded cursor-pointer hover:bg-slate-50 transition-colors has-[:checked]:border-indigo-600 has-[:checked]:bg-indigo-50">
+                                    <label class="relative flex flex-col p-4 border border-slate-200 rounded cursor-pointer hover:bg-slate-50 transition-colors has-[:checked]:border-emerald-600 has-[:checked]:bg-emerald-50">
                                         <input type="radio" name="tipe_faktor" value="Secondary" class="hidden" required {{ old('tipe_faktor', $kriteria->tipe_faktor) == 'Secondary' ? 'checked' : '' }}>
                                         <span class="text-sm font-bold text-slate-800">Secondary Factor</span>
                                         <span class="text-[10px] text-slate-500 mt-1">Faktor pendukung.</span>
@@ -48,7 +48,7 @@
                             <a href="{{ route('admin.kriteria.index') }}" class="px-4 py-2 text-sm font-bold text-slate-500 hover:text-slate-700 transition-colors">
                                 {{ __('Batal') }}
                             </a>
-                            <button type="submit" class="px-6 py-2 bg-indigo-600 text-white rounded font-bold text-xs uppercase tracking-widest hover:bg-indigo-700 transition-colors">
+                            <button type="submit" class="px-6 py-2 bg-emerald-600 text-white rounded font-bold text-xs uppercase tracking-widest hover:bg-emerald-700 transition-colors">
                                 {{ __('Perbarui Kriteria') }}
                             </button>
                         </div>

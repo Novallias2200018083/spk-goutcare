@@ -18,7 +18,7 @@
             {{-- Target Profil --}}
             <div class="bg-white border border-slate-200 rounded-lg p-6 shadow-sm">
                 <h3 class="text-sm font-bold text-slate-800 uppercase tracking-widest border-b border-slate-100 pb-3 mb-4">
-                    <i class="fas fa-bullseye text-indigo-500 mr-2"></i> Profil Target (Kondisi Medis Pasien)
+                    <i class="fas fa-bullseye text-emerald-500 mr-2"></i> Profil Target (Kondisi Medis Pasien)
                 </h3>
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
                     <div>
@@ -44,7 +44,7 @@
                     <div class="flex flex-wrap gap-4">
                         @foreach($kriterias as $k)
                             <div class="bg-white border border-slate-200 px-3 py-2 rounded text-center min-w-[100px]">
-                                <span class="block text-[10px] font-bold text-indigo-600">{{ $k->nama_kriteria }}</span>
+                                <span class="block text-[10px] font-bold text-emerald-600">{{ $k->nama_kriteria }}</span>
                                 <span class="text-sm font-black text-slate-700">Skala {{ $targetSkala[$k->id] }}</span>
                             </div>
                         @endforeach
@@ -73,7 +73,7 @@
                                 @endforeach
                                 <th class="px-4 py-3 text-center bg-slate-900 border-r border-slate-700">NCF (60%)</th>
                                 <th class="px-4 py-3 text-center bg-slate-900 border-r border-slate-700">NSF (40%)</th>
-                                <th class="px-4 py-3 text-center bg-indigo-900">Total Akhir</th>
+                                <th class="px-4 py-3 text-center bg-emerald-900">Total Akhir</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-slate-200">
@@ -117,7 +117,7 @@
                                                 <div class="font-bold text-slate-700">{{ $valMakanan }}</div>
                                                 
                                                 <div class="text-slate-400 text-right">Skala:</div>
-                                                <div class="font-bold text-indigo-600">{{ $skalaMakanan }}</div>
+                                                <div class="font-bold text-emerald-600">{{ $skalaMakanan }}</div>
                                                 
                                                 <div class="text-slate-400 text-right" title="Skala Target dikurangi Skala Makanan">GAP:</div>
                                                 <div class="font-bold text-rose-600 flex items-center gap-1">
@@ -137,7 +137,7 @@
                                     <td class="px-4 py-3 text-center align-middle font-bold text-slate-700 border-r border-slate-200 bg-slate-50/50">
                                         {{ number_format($detail->nilai_nsf, 3) }}
                                     </td>
-                                    <td class="px-4 py-3 text-center align-middle font-black text-indigo-600 bg-indigo-50/30 text-sm">
+                                    <td class="px-4 py-3 text-center align-middle font-black text-emerald-600 bg-emerald-50/30 text-sm">
                                         {{ number_format($detail->nilai_akhir, 3) }}
                                     </td>
                                 </tr>

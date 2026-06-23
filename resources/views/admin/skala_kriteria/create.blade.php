@@ -21,7 +21,7 @@
                             <div>
                                 <label for="kriteria_id" class="block text-sm font-semibold text-slate-700 mb-1">Pilih Kriteria</label>
                                 <select id="kriteria_id" name="kriteria_id" required
-                                    class="w-full text-sm p-2.5 rounded border-slate-200 bg-slate-50 focus:bg-white focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 transition-all">
+                                    class="w-full text-sm p-2.5 rounded border-slate-200 bg-slate-50 focus:bg-white focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 transition-all">
                                     <option value="">-- Pilih Kriteria --</option>
                                     @foreach($kriterias as $k)
                                         <option value="{{ $k->id }}" {{ old('kriteria_id') == $k->id ? 'selected' : '' }}>{{ $k->nama_kriteria }}</option>
@@ -34,13 +34,13 @@
                                 <div>
                                     <label for="batas_bawah" class="block text-sm font-semibold text-slate-700 mb-1">Batas Bawah</label>
                                     <input id="batas_bawah" type="number" step="0.01" name="batas_bawah" value="{{ old('batas_bawah') }}" required
-                                        class="w-full text-sm p-2.5 rounded border-slate-200 bg-slate-50 focus:bg-white focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 transition-all">
+                                        class="w-full text-sm p-2.5 rounded border-slate-200 bg-slate-50 focus:bg-white focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 transition-all">
                                     <x-input-error :messages="$errors->get('batas_bawah')" class="mt-1" />
                                 </div>
                                 <div>
                                     <label for="batas_atas" class="block text-sm font-semibold text-slate-700 mb-1">Batas Atas</label>
                                     <input id="batas_atas" type="number" step="0.01" name="batas_atas" value="{{ old('batas_atas') }}" required
-                                        class="w-full text-sm p-2.5 rounded border-slate-200 bg-slate-50 focus:bg-white focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 transition-all">
+                                        class="w-full text-sm p-2.5 rounded border-slate-200 bg-slate-50 focus:bg-white focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 transition-all">
                                     <x-input-error :messages="$errors->get('batas_atas')" class="mt-1" />
                                 </div>
                             </div>
@@ -49,7 +49,7 @@
                                 <label class="block text-sm font-semibold text-slate-700 mb-2">Nilai Skala (1 - 5)</label>
                                 <div class="flex gap-2">
                                     @foreach([1,2,3,4,5] as $val)
-                                        <label class="flex-1 relative flex flex-col items-center p-3 border border-slate-200 rounded cursor-pointer hover:bg-slate-50 transition-colors has-[:checked]:border-indigo-600 has-[:checked]:bg-indigo-50">
+                                        <label class="flex-1 relative flex flex-col items-center p-3 border border-slate-200 rounded cursor-pointer hover:bg-slate-50 transition-colors has-[:checked]:border-emerald-600 has-[:checked]:bg-emerald-50">
                                             <input type="radio" name="nilai_skala" value="{{ $val }}" class="hidden" required {{ old('nilai_skala') == $val ? 'checked' : '' }}>
                                             <span class="text-lg font-bold text-slate-800">{{ $val }}</span>
                                         </label>
@@ -61,7 +61,7 @@
                             <div>
                                 <label for="keterangan" class="block text-sm font-semibold text-slate-700 mb-1">Keterangan (Opsional)</label>
                                 <input id="keterangan" type="text" name="keterangan" value="{{ old('keterangan') }}" placeholder="Contoh: Rendah, Sedang, Tinggi"
-                                    class="w-full text-sm p-2.5 rounded border-slate-200 bg-slate-50 focus:bg-white focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 transition-all">
+                                    class="w-full text-sm p-2.5 rounded border-slate-200 bg-slate-50 focus:bg-white focus:ring-1 focus:ring-emerald-500 focus:border-emerald-500 transition-all">
                                 <x-input-error :messages="$errors->get('keterangan')" class="mt-1" />
                             </div>
                         </div>
@@ -70,7 +70,7 @@
                             <a href="{{ route('admin.skala.index') }}" class="px-4 py-2 text-sm font-bold text-slate-500 hover:text-slate-700 transition-colors">
                                 {{ __('Batal') }}
                             </a>
-                            <button type="submit" class="px-6 py-2 bg-indigo-600 text-white rounded font-bold text-xs uppercase tracking-widest hover:bg-indigo-700 transition-colors">
+                            <button type="submit" class="px-6 py-2 bg-emerald-600 text-white rounded font-bold text-xs uppercase tracking-widest hover:bg-emerald-700 transition-colors">
                                 {{ __('Simpan Skala') }}
                             </button>
                         </div>

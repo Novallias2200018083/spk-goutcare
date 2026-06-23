@@ -9,10 +9,24 @@ class ProfileMatchingSeeder extends Seeder
 {
     public function run(): void
     {
-        // 1. Insert Data Pengaturan (Core 60% & Secondary 40%)
+        // 1. Insert Data Pengaturan (Core 60% & Secondary 40% + Skala Target Default)
         DB::table('pengaturans')->insert([
-            ['nama_pengaturan' => 'persentase_ncf', 'nilai' => 60, 'keterangan' => 'Persentase Core Factor'],
-            ['nama_pengaturan' => 'persentase_nsf', 'nilai' => 40, 'keterangan' => 'Persentase Secondary Factor'],
+            ['nama_pengaturan' => 'persentase_ncf', 'tipe' => 'persentase', 'nilai' => 60, 'keterangan' => 'Persentase Core Factor'],
+            ['nama_pengaturan' => 'persentase_nsf', 'tipe' => 'persentase', 'nilai' => 40, 'keterangan' => 'Persentase Secondary Factor'],
+            
+            // Aturan Target Skala Default (1 - 5)
+            ['nama_pengaturan' => 'target_purin_akut', 'tipe' => 'skala', 'nilai' => 4, 'keterangan' => 'Target Skala Purin (Fase Akut)'],
+            ['nama_pengaturan' => 'target_purin_normal', 'tipe' => 'skala', 'nilai' => 3, 'keterangan' => 'Target Skala Purin (Fase Normal)'],
+            
+            ['nama_pengaturan' => 'target_kalori_kurus', 'tipe' => 'skala', 'nilai' => 2, 'keterangan' => 'Target Skala Kalori (IMT Kurus)'],
+            ['nama_pengaturan' => 'target_kalori_normal', 'tipe' => 'skala', 'nilai' => 3, 'keterangan' => 'Target Skala Kalori (IMT Normal)'],
+            ['nama_pengaturan' => 'target_kalori_obesitas', 'tipe' => 'skala', 'nilai' => 4, 'keterangan' => 'Target Skala Kalori (IMT Obesitas)'],
+            
+            ['nama_pengaturan' => 'target_lemak_normal', 'tipe' => 'skala', 'nilai' => 3, 'keterangan' => 'Target Skala Lemak (IMT Normal/Kurus)'],
+            ['nama_pengaturan' => 'target_lemak_obesitas', 'tipe' => 'skala', 'nilai' => 4, 'keterangan' => 'Target Skala Lemak (IMT Obesitas)'],
+            
+            ['nama_pengaturan' => 'target_protein_default', 'tipe' => 'skala', 'nilai' => 3, 'keterangan' => 'Target Skala Protein Default'],
+            ['nama_pengaturan' => 'target_karbohidrat_default', 'tipe' => 'skala', 'nilai' => 3, 'keterangan' => 'Target Skala Karbohidrat Default'],
         ]);
 
         // 2. Insert Data Tabel Bobot Gap (Merujuk Tabel 2.2 di Skripsi)

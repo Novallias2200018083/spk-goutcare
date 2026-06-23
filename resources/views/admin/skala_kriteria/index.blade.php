@@ -4,7 +4,7 @@
             <h2 class="font-bold text-xl text-slate-800">
                 {{ __('Skala Kriteria') }}
             </h2>
-            <a href="{{ route('admin.skala.create') }}" class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 transition duration-150">
+            <a href="{{ route('admin.skala.create') }}" class="inline-flex items-center px-4 py-2 bg-emerald-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-emerald-700 transition duration-150">
                 <i class="fas fa-plus mr-2"></i> Tambah Skala
             </a>
         </div>
@@ -23,8 +23,8 @@
 
                     @if ($skalas->isEmpty())
                         <div class="text-center py-20">
-                            <div class="w-32 h-32 bg-indigo-50 rounded-full flex items-center justify-center mx-auto mb-6">
-                                <i class="fas fa-ruler-combined text-5xl text-indigo-300"></i>
+                            <div class="w-32 h-32 bg-emerald-50 rounded-full flex items-center justify-center mx-auto mb-6">
+                                <i class="fas fa-ruler-combined text-5xl text-emerald-300"></i>
                             </div>
                             <h3 class="text-2xl font-bold text-gray-800 mb-2">Belum Ada Skala</h3>
                             <p class="text-gray-500">Tentukan rentang nilai (1-5) untuk setiap kriteria nutrisi.</p>
@@ -43,7 +43,7 @@
                                 </thead>
                                 <tbody class="divide-y divide-gray-100">
                                     @foreach ($skalas as $skala)
-                                        <tr class="hover:bg-indigo-50/50 transition duration-150">
+                                        <tr class="hover:bg-emerald-50/50 transition duration-150">
                                              <td class="px-6 py-4 font-semibold text-slate-800">{{ $skala->kriteria->nama_kriteria }}</td>
                                             <td class="px-6 py-4 text-center font-mono">
                                                 <span class="bg-slate-100 px-2 py-1 rounded text-[10px]">{{ $skala->batas_bawah }}</span>
@@ -51,14 +51,14 @@
                                                 <span class="bg-slate-100 px-2 py-1 rounded text-[10px]">{{ $skala->batas_atas }}</span>
                                             </td>
                                             <td class="px-6 py-4 text-center">
-                                                <span class="w-8 h-8 inline-flex items-center justify-center rounded bg-indigo-600 text-white font-bold text-xs">
+                                                <span class="w-8 h-8 inline-flex items-center justify-center rounded bg-emerald-600 text-white font-bold text-xs">
                                                     {{ $skala->nilai_skala }}
                                                 </span>
                                             </td>
                                             <td class="px-6 py-4 text-slate-500 text-xs italic">{{ $skala->keterangan }}</td>
                                             <td class="px-6 py-5 text-right whitespace-nowrap">
                                                 <div class="flex justify-end gap-2">
-                                                    <a href="{{ route('admin.skala.edit', $skala->id) }}" class="p-2 bg-indigo-50 text-indigo-600 rounded-xl hover:bg-indigo-100 transition duration-300">
+                                                    <a href="{{ route('admin.skala.edit', $skala->id) }}" class="p-2 bg-emerald-50 text-emerald-600 rounded-xl hover:bg-emerald-100 transition duration-300">
                                                         <i class="fas fa-edit"></i>
                                                     </a>
                                                     <form action="{{ route('admin.skala.destroy', $skala->id) }}" method="POST" class="inline">

@@ -4,7 +4,7 @@
             <h2 class="font-bold text-xl text-slate-800">
                 {{ __('Manajemen Makanan') }}
             </h2>
-            <a href="{{ route('admin.makanan.create') }}" class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 transition duration-150">
+            <a href="{{ route('admin.makanan.create') }}" class="inline-flex items-center px-4 py-2 bg-emerald-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-emerald-700 transition duration-150">
                 <i class="fas fa-plus mr-2"></i> Tambah Makanan
             </a>
         </div>
@@ -24,8 +24,8 @@
 
                     @if ($makanans->isEmpty())
                         <div class="text-center py-20">
-                            <div class="w-32 h-32 bg-indigo-50 rounded-full flex items-center justify-center mx-auto mb-6">
-                                <i class="fas fa-utensils text-5xl text-indigo-300"></i>
+                            <div class="w-32 h-32 bg-emerald-50 rounded-full flex items-center justify-center mx-auto mb-6">
+                                <i class="fas fa-utensils text-5xl text-emerald-300"></i>
                             </div>
                             <h3 class="text-2xl font-bold text-gray-800 mb-2">Belum Ada Data Makanan</h3>
                             <p class="text-gray-500">Mulai isi database sistem dengan menambahkan data makanan sehat untuk pasien.</p>
@@ -47,7 +47,7 @@
                                 </thead>
                                 <tbody class="divide-y divide-gray-100">
                                     @foreach ($makanans as $makanan)
-                                        <tr class="hover:bg-indigo-50/50 transition duration-150">
+                                        <tr class="hover:bg-emerald-50/50 transition duration-150">
                                             <td class="px-6 py-5">
                                                 <div class="font-bold text-gray-900">{{ $makanan->nama_makanan }}</div>
                                                 <div class="text-xs text-gray-400 mt-1 line-clamp-1 italic">{{ $makanan->deskripsi }}</div>
@@ -62,7 +62,7 @@
                                             @endforeach
                                             <td class="px-6 py-5 text-right whitespace-nowrap">
                                                 <div class="flex justify-end gap-2">
-                                                    <a href="{{ route('admin.makanan.edit', $makanan) }}" class="p-2 bg-indigo-50 text-indigo-600 rounded-xl hover:bg-indigo-100 transition duration-300" title="Edit">
+                                                    <a href="{{ route('admin.makanan.edit', $makanan) }}" class="p-2 bg-emerald-50 text-emerald-600 rounded-xl hover:bg-emerald-100 transition duration-300" title="Edit">
                                                         <i class="fas fa-edit"></i>
                                                     </a>
                                                     <form action="{{ route('admin.makanan.destroy', $makanan) }}" method="POST" class="inline">

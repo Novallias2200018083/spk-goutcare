@@ -18,14 +18,14 @@
                 <form action="{{ route('admin.laporan.index') }}" method="GET" class="flex flex-col md:flex-row items-end gap-4">
                     <div class="flex-1">
                         <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1 block">Tanggal Awal</label>
-                        <input type="date" name="tanggal_awal" value="{{ request('tanggal_awal') }}" class="w-full text-sm p-2 rounded border-slate-200 bg-slate-50 focus:bg-white focus:ring-indigo-500 transition-colors">
+                        <input type="date" name="tanggal_awal" value="{{ request('tanggal_awal') }}" class="w-full text-sm p-2 rounded border-slate-200 bg-slate-50 focus:bg-white focus:ring-emerald-500 transition-colors">
                     </div>
                     <div class="flex-1">
                         <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1 block">Tanggal Akhir</label>
-                        <input type="date" name="tanggal_akhir" value="{{ request('tanggal_akhir') }}" class="w-full text-sm p-2 rounded border-slate-200 bg-slate-50 focus:bg-white focus:ring-indigo-500 transition-colors">
+                        <input type="date" name="tanggal_akhir" value="{{ request('tanggal_akhir') }}" class="w-full text-sm p-2 rounded border-slate-200 bg-slate-50 focus:bg-white focus:ring-emerald-500 transition-colors">
                     </div>
                     <div class="flex gap-2">
-                        <button type="submit" class="px-4 py-2 bg-indigo-600 text-white rounded font-bold text-xs uppercase tracking-widest hover:bg-indigo-700 transition-colors">
+                        <button type="submit" class="px-4 py-2 bg-emerald-600 text-white rounded font-bold text-xs uppercase tracking-widest hover:bg-emerald-700 transition-colors">
                             <i class="fas fa-filter mr-1"></i> Filter
                         </button>
                         @if(request()->anyFilled(['tanggal_awal', 'tanggal_akhir']))
@@ -87,7 +87,7 @@
                                                 </span>
                                             </td>
                                             <td class="px-6 py-4 text-right">
-                                                <a href="{{ route('admin.laporan.show', $laporan->id) }}" class="text-indigo-600 hover:text-indigo-900 font-bold text-xs uppercase tracking-widest">
+                                                <a href="{{ route('admin.laporan.show', $laporan->id) }}" class="text-emerald-600 hover:text-emerald-900 font-bold text-xs uppercase tracking-widest">
                                                     Detail &rarr;
                                                 </a>
                                             </td>

@@ -4,7 +4,7 @@
             <h2 class="font-bold text-xl text-slate-800">
                 {{ __('Bobot GAP') }}
             </h2>
-            <a href="{{ route('admin.bobot.create') }}" class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 transition duration-150">
+            <a href="{{ route('admin.bobot.create') }}" class="inline-flex items-center px-4 py-2 bg-emerald-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-emerald-700 transition duration-150">
                 <i class="fas fa-plus mr-2"></i> Tambah Bobot GAP
             </a>
         </div>
@@ -49,14 +49,14 @@
                                                 </span>
                                             </td>
                                             <td class="px-6 py-4 text-center">
-                                                <span class="px-3 py-1 bg-indigo-600 text-white font-bold rounded text-xs">
+                                                <span class="px-3 py-1 bg-emerald-600 text-white font-bold rounded text-xs">
                                                     {{ $bobot->bobot_nilai }}
                                                 </span>
                                             </td>
                                             <td class="px-6 py-4 text-slate-500 text-xs italic">{{ $bobot->keterangan }}</td>
                                             <td class="px-6 py-4 text-right whitespace-nowrap">
                                                 <div class="flex justify-end gap-2">
-                                                    <a href="{{ route('admin.bobot.edit', $bobot->id) }}" class="text-indigo-600 hover:text-indigo-900 font-bold text-xs uppercase tracking-widest">
+                                                    <a href="{{ route('admin.bobot.edit', $bobot->id) }}" class="text-emerald-600 hover:text-emerald-900 font-bold text-xs uppercase tracking-widest">
                                                         Edit
                                                     </a>
                                                     <form action="{{ route('admin.bobot.destroy', $bobot->id) }}" method="POST" class="inline">

@@ -4,7 +4,7 @@
             <h2 class="font-bold text-xl text-slate-800">
                 {{ __('Manajemen Pasien') }}
             </h2>
-            <a href="{{ route('admin.pengguna.create') }}" class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-700 transition duration-150">
+            <a href="{{ route('admin.pengguna.create') }}" class="inline-flex items-center px-4 py-2 bg-emerald-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-emerald-700 transition duration-150">
                 <i class="fas fa-user-plus mr-2"></i> Tambah Pasien
             </a>
         </div>
@@ -24,8 +24,8 @@
 
                     @if ($penggunas->isEmpty())
                         <div class="text-center py-20">
-                            <div class="w-32 h-32 bg-indigo-50 rounded-full flex items-center justify-center mx-auto mb-6">
-                                <i class="fas fa-user-friends text-5xl text-indigo-300"></i>
+                            <div class="w-32 h-32 bg-emerald-50 rounded-full flex items-center justify-center mx-auto mb-6">
+                                <i class="fas fa-user-friends text-5xl text-emerald-300"></i>
                             </div>
                             <h3 class="text-2xl font-bold text-gray-800 mb-2">Belum Ada Pasien</h3>
                             <p class="text-gray-500">Daftar pasien yang terdaftar di sistem akan muncul di sini.</p>
@@ -44,10 +44,10 @@
                                 </thead>
                                 <tbody class="divide-y divide-gray-100">
                                     @foreach ($penggunas as $user)
-                                        <tr class="hover:bg-indigo-50/50 transition duration-150">
+                                        <tr class="hover:bg-emerald-50/50 transition duration-150">
                                             <td class="px-6 py-5">
                                                 <div class="flex items-center">
-                                                    <div class="w-10 h-10 bg-indigo-100 text-indigo-700 rounded-full flex items-center justify-center font-bold mr-3 shadow-inner">
+                                                    <div class="w-10 h-10 bg-emerald-100 text-emerald-700 rounded-full flex items-center justify-center font-bold mr-3 shadow-inner">
                                                         {{ substr($user->name, 0, 1) }}
                                                     </div>
                                                     <div class="font-bold text-gray-900">{{ $user->name }}</div>
@@ -65,7 +65,7 @@
                                             </td>
                                             <td class="px-6 py-5 text-right whitespace-nowrap">
                                                 <div class="flex justify-end gap-2">
-                                                    <a href="{{ route('admin.pengguna.edit', $user) }}" class="p-2 bg-indigo-50 text-indigo-600 rounded-xl hover:bg-indigo-100 transition duration-300" title="Edit">
+                                                    <a href="{{ route('admin.pengguna.edit', $user) }}" class="p-2 bg-emerald-50 text-emerald-600 rounded-xl hover:bg-emerald-100 transition duration-300" title="Edit">
                                                         <i class="fas fa-user-edit"></i>
                                                     </a>
                                                     <form action="{{ route('admin.pengguna.destroy', $user) }}" method="POST" class="inline">

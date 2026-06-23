@@ -70,7 +70,7 @@
         </div>
 
         <div class="no-print fixed bottom-10 right-10">
-            <button onclick="window.print()" class="bg-indigo-600 text-white px-10 py-4 rounded-full font-black shadow-2xl hover:bg-indigo-700">
+            <button onclick="window.print()" class="bg-emerald-600 text-white px-10 py-4 rounded-full font-black shadow-2xl hover:bg-emerald-700">
                 <i class="fas fa-print mr-2"></i> Print Sekarang
             </button>
         </div>

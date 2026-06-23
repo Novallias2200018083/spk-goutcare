@@ -20,7 +20,7 @@ class PengaturanController extends Controller
         // Validasi array inputan
         $request->validate([
             'pengaturan' => 'required|array',
-            'pengaturan.*.nilai' => 'required|numeric|min:0|max:100', // Pastikan persen 0-100
+            'pengaturan.*.nilai' => 'required|numeric', 
         ]);
 
         // Looping untuk update masing-masing nilai pengaturan

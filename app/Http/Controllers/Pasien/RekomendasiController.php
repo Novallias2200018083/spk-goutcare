@@ -44,38 +44,41 @@ class RekomendasiController extends Controller
             $label = 'Sedang';
             $alasan = '';
 
+            // Ambil semua aturan target dari database
+            $aturans = \App\Models\Pengaturan::where('tipe', 'skala')->pluck('nilai', 'nama_pengaturan');
+
             if (str_contains($kName, 'purin')) {
                 if (strtolower($profil->fase_asam_urat) == 'akut') { 
-                    $skala = 4; $label = 'Rendah'; 
+                    $skala = $aturans['target_purin_akut'] ?? 4; $label = 'Disesuaikan (Akut)'; 
                     $alasan = 'Kondisi fase Akut (kambuh).';
                 } else { 
-                    $skala = 3; $label = 'Sedang'; 
+                    $skala = $aturans['target_purin_normal'] ?? 3; $label = 'Disesuaikan (Normal)'; 
                     $alasan = 'Fase Normal (pemeliharaan).';
                 }
             } elseif (str_contains($kName, 'kalori')) {
                 if ($imt < 18.5) { 
-                    $skala = 2; $label = 'Tinggi'; 
+                    $skala = $aturans['target_kalori_kurus'] ?? 2; $label = 'Disesuaikan (Kurus)'; 
                     $alasan = 'IMT Kurus (< 18.5).';
                 } elseif ($imt >= 25) { 
-                    $skala = 4; $label = 'Rendah'; 
+                    $skala = $aturans['target_kalori_obesitas'] ?? 4; $label = 'Disesuaikan (Obesitas)'; 
                     $alasan = 'IMT Obesitas (>= 25).';
                 } else { 
-                    $skala = 3; $label = 'Sedang'; 
+                    $skala = $aturans['target_kalori_normal'] ?? 3; $label = 'Disesuaikan (Normal)'; 
                     $alasan = 'IMT Normal.';
                 }
             } elseif (str_contains($kName, 'lemak')) {
                 if ($imt >= 25) { 
-                    $skala = 4; $label = 'Rendah'; 
+                    $skala = $aturans['target_lemak_obesitas'] ?? 4; $label = 'Disesuaikan (Obesitas)'; 
                     $alasan = 'IMT Obesitas (>= 25).';
                 } else { 
-                    $skala = 3; $label = 'Sedang'; 
+                    $skala = $aturans['target_lemak_normal'] ?? 3; $label = 'Disesuaikan (Normal)'; 
                     $alasan = 'IMT Normal/Kurus.';
                 }
             } elseif (str_contains($kName, 'protein')) {
-                $skala = 3; $label = 'Sedang';
+                $skala = $aturans['target_protein_default'] ?? 3; $label = 'Disesuaikan';
                 $alasan = 'Kebutuhan standar otot.';
             } elseif (str_contains($kName, 'karbohidrat')) {
-                $skala = 3; $label = 'Sedang';
+                $skala = $aturans['target_karbohidrat_default'] ?? 3; $label = 'Disesuaikan';
                 $alasan = 'Kebutuhan standar kalori.';
             }
 
@@ -130,34 +133,32 @@ class RekomendasiController extends Controller
             $persentaseNcf = (Pengaturan::where('nama_pengaturan', 'persentase_ncf')->value('nilai') ?? 60) / 100;
             $persentaseNsf = (Pengaturan::where('nama_pengaturan', 'persentase_nsf')->value('nilai') ?? 40) / 100;
 
-            // 2. Tentukan Skala Target Pasien (Berbasis Aturan Ahli / Rule-Based Logic)
+            // Tentukan Skala Target Pasien (Berbasis Aturan dari Pengaturan)
             $targetSkala = [];
             
             // Hitung IMT (Indeks Massa Tubuh)
             $tinggiMeter = $profil->tinggi_badan / 100;
             $imt = ($tinggiMeter > 0) ? ($profil->berat_badan / ($tinggiMeter * $tinggiMeter)) : 0;
             
+            // Ambil semua aturan skala
+            $aturans = \App\Models\Pengaturan::where('tipe', 'skala')->pluck('nilai', 'nama_pengaturan');
+
             foreach ($kriterias as $k) {
                 $kName = strtolower($k->nama_kriteria);
-                $skala = 3; // Default Skala (3 = Sedang)
+                $skala = 3; // Default Skala
                 
                 if (str_contains($kName, 'purin')) {
-                    // Aturan C1: Purin -> Fase Akut = Rendah (4), Fase Normal = Sedang (3)
-                    $skala = (strtolower($profil->fase_asam_urat) == 'akut') ? 4 : 3;
+                    $skala = (strtolower($profil->fase_asam_urat) == 'akut') ? ($aturans['target_purin_akut'] ?? 4) : ($aturans['target_purin_normal'] ?? 3);
                 } elseif (str_contains($kName, 'kalori')) {
-                    // Aturan C2: Kalori -> IMT < 18.5 = Tinggi (2), IMT >= 25 = Rendah (4), Normal = Sedang (3)
-                    if ($imt < 18.5) $skala = 2;
-                    elseif ($imt >= 25) $skala = 4;
-                    else $skala = 3;
+                    if ($imt < 18.5) $skala = $aturans['target_kalori_kurus'] ?? 2;
+                    elseif ($imt >= 25) $skala = $aturans['target_kalori_obesitas'] ?? 4;
+                    else $skala = $aturans['target_kalori_normal'] ?? 3;
                 } elseif (str_contains($kName, 'lemak')) {
-                    // Aturan C3: Lemak -> IMT >= 25 = Rendah (4), Normal/Kurus = Sedang (3)
-                    $skala = ($imt >= 25) ? 4 : 3;
+                    $skala = ($imt >= 25) ? ($aturans['target_lemak_obesitas'] ?? 4) : ($aturans['target_lemak_normal'] ?? 3);
                 } elseif (str_contains($kName, 'protein')) {
-                    // Aturan C4: Protein -> Sedang (3) untuk pemeliharaan otot
-                    $skala = 3;
+                    $skala = $aturans['target_protein_default'] ?? 3;
                 } elseif (str_contains($kName, 'karbohidrat')) {
-                    // Aturan C5: Karbohidrat -> Sedang (3) sebagai pengganti kalori lemak
-                    $skala = 3;
+                    $skala = $aturans['target_karbohidrat_default'] ?? 3;
                 }
                 
                 $targetSkala[$k->id] = $skala;
