@@ -22,38 +22,110 @@
         </div>
     </x-slot>
 
-    <div class="py-6">
+    <div class="-mt-2 sm:-mt-4 lg:-mt-6">
         <div class="max-w-6xl mx-auto space-y-6">
             {{-- Info Banner --}}
-            <div class="bg-emerald-600 rounded-lg p-6 text-white shadow-lg shadow-emerald-100 flex flex-col md:flex-row justify-between items-center gap-4">
-                <div>
-                    <h3 class="text-lg font-bold">Analisis Selesai!</h3>
-                    <p class="text-xs text-emerald-100 opacity-80 mt-1">Sistem telah mengurutkan makanan berdasarkan kecocokan tertinggi dengan profil gizi Anda.</p>
+            <div class="bg-emerald-600 rounded-lg p-5 md:p-6 text-white shadow-lg shadow-emerald-100 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 relative overflow-hidden">
+                <div class="absolute right-0 top-0 opacity-10 transform translate-x-4 -translate-y-4">
+                    <i class="fas fa-medal text-8xl"></i>
                 </div>
-                <div class="flex gap-4">
-                    <div class="text-center px-4 border-r border-emerald-400/30">
-                        <span class="block text-xs font-bold text-emerald-200 uppercase tracking-widest">Total Menu</span>
-                        <span class="text-2xl font-bold">{{ $detailRiwayats->count() }}</span>
+                <div class="relative z-10 w-full md:w-auto">
+                    <h3 class="text-lg md:text-xl font-bold flex items-center gap-2">
+                        <i class="fas fa-check-circle text-emerald-300"></i> Analisis Selesai!
+                    </h3>
+                    <p class="text-xs md:text-sm text-emerald-50 mt-1.5 opacity-90 leading-relaxed max-w-lg">Sistem telah mengurutkan alternatif makanan berdasarkan tingkat kecocokan tertinggi dengan profil kebutuhan gizi harian Anda.</p>
+                </div>
+                <div class="w-full md:w-auto flex flex-row items-center justify-between md:justify-end gap-3 md:gap-4 mt-2 md:mt-0 pt-4 md:pt-0 border-t border-emerald-500/50 md:border-t-0 relative z-10">
+                    <div class="text-left md:text-center px-0 md:px-4 md:border-r border-emerald-400/30">
+                        <span class="block text-[10px] md:text-xs font-bold text-emerald-200 uppercase tracking-widest">Total Menu</span>
+                        <span class="text-2xl md:text-3xl font-black tracking-tight">{{ $detailRiwayats->count() }}</span>
                     </div>
-                    <div class="text-center px-4">
-                        <a href="{{ route('pasien.rekomendasi.index') }}" class="inline-flex items-center px-4 py-2 bg-white/10 hover:bg-white/20 rounded text-[10px] font-bold uppercase tracking-widest transition-all">
-                            Hitung Ulang
+                    <div class="flex items-center gap-2">
+                        <a href="{{ route('pasien.riwayat.export', $riwayat->id) }}" class="inline-flex items-center justify-center w-9 h-9 md:w-auto md:h-auto md:px-4 md:py-2.5 bg-white text-emerald-700 hover:bg-emerald-50 rounded-lg text-xs font-bold uppercase tracking-widest transition-all shadow-sm group">
+                            <i class="fas fa-file-pdf md:mr-2 group-hover:scale-110 transition-transform"></i> <span class="hidden md:inline">Unduh PDF</span>
+                        </a>
+                        <a href="{{ route('pasien.rekomendasi.index') }}" class="inline-flex items-center justify-center w-9 h-9 md:w-auto md:h-auto md:px-4 md:py-2.5 bg-emerald-700/50 hover:bg-emerald-700 rounded-lg text-xs font-bold uppercase tracking-widest transition-all border border-emerald-500/50 hover:border-emerald-400 group text-white">
+                            <i class="fas fa-redo md:mr-2 group-hover:rotate-180 transition-transform duration-500"></i> <span class="hidden md:inline">Hitung Ulang</span>
                         </a>
                     </div>
                 </div>
             </div>
 
+            @php
+                $profil = Auth::user()->profilPasien;
+            @endphp
+            @if($profil)
+            {{-- Profil Medis Card --}}
+            <div class="bg-white rounded-xl border border-slate-200 p-4 md:p-5 shadow-sm hover:shadow-md transition-shadow" x-data="{ showProfile: false }">
+                <div class="flex justify-between items-center cursor-pointer select-none" @click="showProfile = !showProfile">
+                    <div class="flex items-center gap-3 md:gap-4">
+                        <div class="w-10 h-10 md:w-12 md:h-12 rounded-lg bg-blue-50 flex items-center justify-center text-blue-600 shadow-inner">
+                            <i class="fas fa-notes-medical text-lg md:text-xl"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-slate-800 text-sm md:text-base">Profil Medis & Target Gizi</h4>
+                            <p class="text-[10px] md:text-xs text-slate-500 mt-0.5">Parameter yang digunakan sebagai acuan sistem.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="text-[10px] font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded uppercase tracking-widest hidden md:inline-block border border-blue-100" x-show="!showProfile">Lihat Detail</span>
+                        <button class="w-8 h-8 flex items-center justify-center rounded-full bg-slate-50 hover:bg-blue-50 text-slate-400 hover:text-blue-600 transition-all border border-slate-200 hover:border-blue-200" :class="showProfile ? 'rotate-180 bg-blue-50 text-blue-600 border-blue-200' : ''">
+                            <i class="fas fa-chevron-down transition-transform"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div x-show="showProfile" x-collapse class="mt-4 pt-4 border-t border-slate-100">
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
+                        <div class="p-3 md:p-4 bg-slate-50 rounded-lg border border-slate-100">
+                            <span class="block text-[9px] md:text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1 md:mb-1.5">Fase Asam Urat</span>
+                            <span class="text-xs md:text-sm font-bold text-slate-700">{{ ucwords(str_replace('_', ' ', $profil->fase_asam_urat)) }}</span>
+                        </div>
+                        <div class="p-3 md:p-4 bg-rose-50 rounded-lg border border-rose-100">
+                            <span class="block text-[9px] md:text-[10px] font-bold text-rose-500 uppercase tracking-widest mb-1 md:mb-1.5"><i class="fas fa-exclamation-triangle mr-1"></i> Batas Purin</span>
+                            <span class="text-sm md:text-base font-bold text-rose-700">{{ $profil->toleransi_purin }} <span class="text-[10px] font-medium text-rose-500">mg</span></span>
+                        </div>
+                        <div class="p-3 md:p-4 bg-emerald-50 rounded-lg border border-emerald-100">
+                            <span class="block text-[9px] md:text-[10px] font-bold text-emerald-500 uppercase tracking-widest mb-1 md:mb-1.5"><i class="fas fa-fire mr-1"></i> Target Kalori</span>
+                            <span class="text-sm md:text-base font-bold text-emerald-700">{{ number_format($profil->kebutuhan_kalori, 0, ',', '.') }} <span class="text-[10px] font-medium text-emerald-500">kkal</span></span>
+                        </div>
+                        <div class="p-3 md:p-4 bg-slate-50 rounded-lg border border-slate-100">
+                            <span class="block text-[9px] md:text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1 md:mb-1.5">Tingkat Aktivitas</span>
+                            <span class="text-xs md:text-sm font-bold text-slate-700">{{ ucwords(str_replace('_', ' ', $profil->tingkat_aktivitas)) }}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-3 md:mt-4 p-3 md:p-4 bg-slate-50/50 rounded-lg border border-slate-100">
+                        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2.5 block">Makronutrien & Fisik:</span>
+                        <div class="flex flex-col lg:flex-row gap-3 lg:gap-4">
+                            {{-- Macronutrients Group --}}
+                            <div class="flex flex-wrap gap-2 w-full lg:flex-1">
+                                <span class="px-3 py-1.5 bg-white text-slate-600 rounded-md text-[10px] md:text-xs font-bold shadow-sm border border-emerald-100 flex-1 text-center whitespace-nowrap">Protein <span class="text-emerald-600 ml-1">{{ $profil->kebutuhan_protein }}g</span></span>
+                                <span class="px-3 py-1.5 bg-white text-slate-600 rounded-md text-[10px] md:text-xs font-bold shadow-sm border border-amber-100 flex-1 text-center whitespace-nowrap">Lemak <span class="text-amber-600 ml-1">{{ $profil->kebutuhan_lemak }}g</span></span>
+                                <span class="px-3 py-1.5 bg-white text-slate-600 rounded-md text-[10px] md:text-xs font-bold shadow-sm border border-blue-100 flex-1 text-center whitespace-nowrap min-w-[120px]">Karbohidrat <span class="text-blue-600 ml-1">{{ $profil->kebutuhan_karbohidrat }}g</span></span>
+                            </div>
+                            {{-- Physical Group --}}
+                            <div class="flex flex-wrap gap-2 w-full lg:w-auto lg:border-l border-slate-200 lg:pl-4">
+                                <span class="px-3 py-1.5 bg-white text-slate-600 rounded-md text-[10px] md:text-xs font-bold shadow-sm border border-slate-200 flex-1 text-center whitespace-nowrap"><i class="fas fa-weight mr-1 opacity-40"></i> {{ $profil->berat_badan }}kg / {{ $profil->tinggi_badan }}cm</span>
+                                <span class="px-3 py-1.5 bg-white text-slate-600 rounded-md text-[10px] md:text-xs font-bold shadow-sm border border-slate-200 flex-1 lg:flex-none text-center whitespace-nowrap"><i class="fas fa-birthday-cake mr-1 opacity-40"></i> {{ $profil->umur }} thn</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @endif
+
             {{-- Alpine Tab Wrapper --}}
             <div x-data="{ tabFilter: 'semua' }">
                 {{-- Tabs Filter --}}
-                <div class="flex overflow-x-auto pb-4 mb-6 border-b border-slate-200 gap-2 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
-                    <button @click="tabFilter = 'semua'" :class="tabFilter === 'semua' ? 'bg-slate-800 text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'" class="shrink-0 whitespace-nowrap px-4 py-2 rounded-lg text-[10px] sm:text-xs font-bold transition-colors uppercase tracking-widest"><i class="fas fa-list sm:mr-1"></i> Semua Peringkat</button>
-                    <button @click="tabFilter = 'aman'" :class="tabFilter === 'aman' ? 'bg-emerald-600 text-white' : 'bg-emerald-50 text-emerald-700 hover:bg-emerald-100'" class="shrink-0 whitespace-nowrap px-4 py-2 rounded-lg text-[10px] sm:text-xs font-bold transition-colors uppercase tracking-widest"><i class="fas fa-check-circle sm:mr-1"></i> Aman Dikonsumsi</button>
-                    <button @click="tabFilter = 'bahaya'" :class="tabFilter === 'bahaya' ? 'bg-rose-600 text-white' : 'bg-rose-50 text-rose-700 hover:bg-rose-100'" class="shrink-0 whitespace-nowrap px-4 py-2 rounded-lg text-[10px] sm:text-xs font-bold transition-colors uppercase tracking-widest"><i class="fas fa-exclamation-triangle sm:mr-1"></i> Bahaya</button>
+                <div class="flex overflow-x-auto pb-4 mb-2 md:mb-6 border-b border-slate-200 gap-2 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+                    <button @click="tabFilter = 'semua'" :class="tabFilter === 'semua' ? 'bg-slate-800 text-white shadow-md' : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-50'" class="shrink-0 whitespace-nowrap px-4 py-2.5 rounded-full text-[10px] sm:text-xs font-bold transition-all uppercase tracking-widest"><i class="fas fa-list sm:mr-1.5"></i> Semua Peringkat</button>
+                    <button @click="tabFilter = 'aman'" :class="tabFilter === 'aman' ? 'bg-emerald-600 text-white shadow-md shadow-emerald-200' : 'bg-white border border-slate-200 text-emerald-700 hover:bg-emerald-50'" class="shrink-0 whitespace-nowrap px-4 py-2.5 rounded-full text-[10px] sm:text-xs font-bold transition-all uppercase tracking-widest"><i class="fas fa-check-circle sm:mr-1.5"></i> Aman Dikonsumsi</button>
+                    <button @click="tabFilter = 'bahaya'" :class="tabFilter === 'bahaya' ? 'bg-rose-600 text-white shadow-md shadow-rose-200' : 'bg-white border border-slate-200 text-rose-700 hover:bg-rose-50'" class="shrink-0 whitespace-nowrap px-4 py-2.5 rounded-full text-[10px] sm:text-xs font-bold transition-all uppercase tracking-widest"><i class="fas fa-exclamation-triangle sm:mr-1.5"></i> Bahaya</button>
                 </div>
 
                 {{-- Ranking List --}}
-                <div class="grid grid-cols-1 gap-4">
+                <div class="grid grid-cols-1 gap-3 md:gap-4">
                     @foreach($detailRiwayats as $index => $detail)
                         @php
                             $isTop = $index < 3;
@@ -67,134 +139,118 @@
                         @endphp
                         <div x-show="tabFilter === 'semua' || (tabFilter === 'aman' && !{{ $isBahaya ? 'true' : 'false' }}) || (tabFilter === 'bahaya' && {{ $isBahaya ? 'true' : 'false' }})" 
                              x-transition.opacity.duration.300ms
-                             class="bg-white border border-slate-200 rounded-lg p-4 shadow-sm hover:border-emerald-300 transition-all group" 
+                             class="bg-white border {{ $isTop ? 'border-emerald-200 shadow-emerald-100/50' : 'border-slate-200 shadow-slate-100/50' }} rounded-xl p-4 md:p-5 shadow-sm hover:shadow-md hover:border-emerald-300 transition-all group relative overflow-hidden" 
                              x-data="{ open: false }">
-                            <div class="flex flex-col md:flex-row items-center gap-6">
-                            {{-- Rank Number --}}
-                            <div class="flex-shrink-0 w-12 h-12 rounded-lg flex items-center justify-center {{ $isTop ? 'bg-emerald-600 text-white' : 'bg-slate-100 text-slate-400' }} font-bold text-xl">
-                                #{{ $index + 1 }}
-                            </div>
+                             
+                            {{-- Decorative Top Rank Background --}}
+                            @if($index == 0)
+                                <div class="absolute top-0 right-0 w-32 h-32 bg-emerald-50 rounded-bl-full -z-10 -mr-16 -mt-16 opacity-50"></div>
+                            @endif
 
-                            {{-- Food Info --}}
-                            <div class="flex-1 cursor-pointer" @click="open = !open">
-                                <div class="flex items-center gap-3 mb-1">
-                                    <h4 class="font-bold text-slate-800 text-lg">{{ $detail->makanan->nama_makanan }}</h4>
-                                    <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-widest {{ $detail->makanan->is_user_input ? 'bg-amber-50 text-amber-600' : 'bg-slate-100 text-slate-500' }}">
-                                        {{ $detail->makanan->is_user_input ? 'Pribadi' : 'Sistem' }}
-                                    </span>
-                                </div>
-                                <p class="text-xs text-slate-500 line-clamp-1 italic">{{ $detail->makanan->deskripsi }}</p>
-                            </div>
-
-                            {{-- Stats --}}
-                            <div class="flex flex-wrap justify-center md:justify-end gap-3 md:gap-8">
-                                <div class="text-center">
-                                    <span class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Nilai Akhir</span>
-                                    <span class="text-lg font-bold text-emerald-600">{{ number_format($detail->nilai_akhir, 3) }}</span>
-                                </div>
-                                <div class="text-center">
-                                    <span class="block text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Kelayakan</span>
-                                    <span class="inline-block px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest border border-{{ $statusColor }}-200 bg-{{ $statusColor }}-50 text-{{ $statusColor }}-600">
-                                        {{ $detail->status_kelayakan }}
-                                    </span>
-                                </div>
-                            </div>
-
-                            {{-- Expand Action --}}
-                            <div class="flex-shrink-0">
-                                <button @click="open = !open" class="p-2 text-slate-300 hover:text-emerald-600 transition-colors" :class="open ? 'rotate-180 text-emerald-600' : ''">
-                                    <i class="fas fa-chevron-down transition-transform"></i>
-                                </button>
-                            </div>
-                        </div>
-
-                        {{-- Collapsible Detail (Nutrients) --}}
-                        <div x-show="open" 
-                             x-transition:enter="transition ease-out duration-200"
-                             x-transition:enter-start="opacity-0 transform -translate-y-2"
-                             x-transition:enter-end="opacity-100 transform translate-y-0"
-                             class="mt-4 pt-4 border-t border-slate-50">
-                            
-                            <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
-                                @foreach($detail->makanan->nilaiKriterias as $nk)
-                                    <div class="text-center p-2 rounded bg-slate-50/50">
-                                        <span class="block text-[9px] font-bold text-slate-400 uppercase tracking-tighter mb-0.5">{{ $nk->kriteria->nama_kriteria }}</span>
-                                        <span class="text-xs font-bold text-slate-700">
-                                            {{ $nk->nilai }} 
-                                            <span class="text-[9px] font-medium text-slate-400">
-                                                @if(str_contains(strtolower($nk->kriteria->nama_kriteria), 'purin')) mg
-                                                @elseif(str_contains(strtolower($nk->kriteria->nama_kriteria), 'kalori')) kkal
-                                                @else g
-                                                @endif
+                            <div class="flex flex-col md:flex-row items-start md:items-center gap-4 w-full">
+                                <div class="flex items-start md:items-center gap-3 w-full md:w-auto">
+                                    {{-- Rank Number --}}
+                                    <div class="flex-shrink-0 w-10 h-10 md:w-12 md:h-12 rounded-lg flex items-center justify-center {{ $isTop ? 'bg-gradient-to-br from-emerald-500 to-emerald-600 text-white shadow-inner' : 'bg-slate-100 text-slate-400' }} font-bold text-lg md:text-xl relative z-10">
+                                        #{{ $index + 1 }}
+                                    </div>
+                                    
+                                    {{-- Food Info --}}
+                                    <div class="flex-1 cursor-pointer pr-8 md:pr-0" @click="open = !open">
+                                        <div class="flex items-center gap-2 mb-0.5 flex-wrap">
+                                            <h4 class="font-bold text-slate-800 text-base md:text-lg leading-tight">{{ $detail->makanan->nama_makanan }}</h4>
+                                            <span class="px-2 py-0.5 rounded text-[9px] font-bold uppercase tracking-widest {{ $detail->makanan->is_user_input ? 'bg-amber-50 text-amber-600' : 'bg-slate-100 text-slate-500' }}">
+                                                {{ $detail->makanan->is_user_input ? 'Pribadi' : 'Sistem' }}
                                             </span>
+                                        </div>
+                                        <p class="text-[11px] md:text-xs text-slate-500 line-clamp-1 italic">{{ $detail->makanan->deskripsi ?? 'Tanpa deskripsi' }}</p>
+                                    </div>
+                                </div>
+
+                                {{-- Stats Container --}}
+                                <div class="flex flex-row items-center justify-between md:justify-end w-full md:w-auto md:ml-auto gap-4 mt-2 md:mt-0 p-3 md:p-0 bg-slate-50 md:bg-transparent rounded-lg border border-slate-100 md:border-transparent">
+                                    <div class="text-left md:text-center">
+                                        <span class="block text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-0.5">Nilai Akhir</span>
+                                        <span class="text-base md:text-lg font-bold text-emerald-600">{{ number_format($detail->nilai_akhir, 3) }}</span>
+                                    </div>
+                                    <div class="text-right md:text-center">
+                                        <span class="block text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1">Kelayakan</span>
+                                        <span class="inline-block px-2.5 py-1 rounded-md text-[9px] md:text-[10px] font-bold uppercase tracking-widest border border-{{ $statusColor }}-200 bg-{{ $statusColor }}-50 text-{{ $statusColor }}-600 shadow-sm">
+                                            <i class="fas {{ $isBahaya ? 'fa-times-circle' : 'fa-check-circle' }} mr-1"></i>{{ $detail->status_kelayakan }}
                                         </span>
                                     </div>
-                                @endforeach
-                            </div>
-
-                            <div class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4 text-[10px]">
-                                <div class="p-3 bg-emerald-50/30 rounded border border-emerald-100/50">
-                                    <span class="font-bold text-emerald-900 block mb-1">Performa Core Factor (NCF)</span>
-                                    <div class="flex items-center gap-2">
-                                        <div class="flex-1 h-1 bg-slate-200 rounded-full overflow-hidden">
-                                            <div class="h-full bg-emerald-500" style="width: {{ ($detail->nilai_ncf / 5) * 100 }}%"></div>
-                                        </div>
-                                        <span class="font-bold text-emerald-600">{{ number_format($detail->nilai_ncf, 2) }}</span>
-                                    </div>
                                 </div>
-                                <div class="p-3 bg-slate-50 rounded border border-slate-100">
-                                    <span class="font-bold text-slate-900 block mb-1">Performa Secondary Factor (NSF)</span>
-                                    <div class="flex items-center gap-2">
-                                        <div class="flex-1 h-1 bg-slate-200 rounded-full overflow-hidden">
-                                            <div class="h-full bg-slate-400" style="width: {{ ($detail->nilai_nsf / 5) * 100 }}%"></div>
-                                        </div>
-                                        <span class="font-bold text-slate-600">{{ number_format($detail->nilai_nsf, 2) }}</span>
-                                    </div>
+                                
+                                {{-- Expand Action (Absolute on Mobile, Relative on Desktop) --}}
+                                <div class="absolute right-3 top-3 md:relative md:right-0 md:top-0 md:flex-shrink-0">
+                                    <button @click="open = !open" class="w-8 h-8 flex items-center justify-center rounded-full bg-slate-50 hover:bg-emerald-50 text-slate-400 hover:text-emerald-600 transition-all border border-slate-200 hover:border-emerald-200" :class="open ? 'rotate-180 bg-emerald-50 text-emerald-600 border-emerald-200' : ''">
+                                        <i class="fas fa-chevron-down transition-transform"></i>
+                                    </button>
                                 </div>
                             </div>
 
-                            {{-- AI Insight Section (External Integration) --}}
-                            <div x-data="{ loading: false, insightText: '', fetchInsight() { 
-                                    if(this.insightText) return; 
-                                    this.loading = true; 
-                                    fetch('{{ route('pasien.riwayat.ai', $detail->id) }}')
-                                        .then(res => res.json())
-                                        .then(data => { this.insightText = data.insight; this.loading = false; })
-                                        .catch(() => { this.insightText = 'Gagal terhubung ke server AI.'; this.loading = false; });
-                                } 
-                            }" class="mt-4 p-4 rounded-lg bg-gradient-to-r from-purple-50 to-emerald-50 border border-purple-100 shadow-sm relative overflow-hidden">
-                                
-                                <div class="absolute top-0 right-0 -mt-2 -mr-2 text-purple-200 opacity-50">
-                                    <i class="fas fa-robot text-6xl"></i>
-                                </div>
-                                
-                                <div class="relative z-10">
-                                    {{-- Sistem Lokal Insight --}}
-                                    <div class="mb-3 pb-3 border-b border-emerald-100/50">
-                                        {!! Str::markdown($detail->ai_insight) !!}
+                            {{-- Collapsible Detail (Nutrients & AI) --}}
+                            <div x-show="open" x-collapse>
+                                <div class="mt-4 pt-4 border-t border-slate-100">
+                                    <h5 class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-3">Kandungan Gizi</h5>
+                                    <div class="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-4">
+                                        @foreach($detail->makanan->nilaiKriterias as $nk)
+                                            <div class="text-center p-3 rounded-lg bg-slate-50/70 border border-slate-100">
+                                                <span class="block text-[9px] font-bold text-slate-500 uppercase tracking-tighter mb-1">{{ $nk->kriteria->nama_kriteria }}</span>
+                                                <span class="text-sm md:text-base font-bold text-slate-800">
+                                                    {{ $nk->nilai }} 
+                                                    <span class="text-[10px] font-medium text-slate-400 ml-0.5">
+                                                        @if(str_contains(strtolower($nk->kriteria->nama_kriteria), 'purin')) mg
+                                                        @elseif(str_contains(strtolower($nk->kriteria->nama_kriteria), 'kalori')) kkal
+                                                        @else g
+                                                        @endif
+                                                    </span>
+                                                </span>
+                                            </div>
+                                        @endforeach
                                     </div>
-                                    
-                                    {{-- AI Eksternal Tombol & Hasil --}}
-                                    <template x-if="!insightText && !loading">
-                                        <button @click="fetchInsight()" class="text-xs bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-1.5 px-3 rounded inline-flex items-center transition-colors">
-                                            <i class="fas fa-magic mr-1.5"></i> Minta Analisis AI Lanjutan (Gemini)
-                                        </button>
-                                    </template>
-                                    
-                                    <template x-if="loading">
-                                        <div class="text-xs text-emerald-500 font-bold flex items-center animate-pulse">
-                                            <i class="fas fa-circle-notch fa-spin mr-2"></i> AI sedang menganalisis kecocokan gizi Anda...
+
+                                    <div class="mt-3 grid grid-cols-1 md:grid-cols-2 gap-2 md:gap-4 text-[10px]">
+                                        <div class="p-3 bg-emerald-50/50 rounded-lg border border-emerald-100/60 flex flex-col justify-center">
+                                            <div class="flex justify-between items-center mb-1.5">
+                                                <span class="font-bold text-emerald-900">Performa Core Factor (NCF)</span>
+                                                <span class="font-bold text-emerald-600 text-xs">{{ number_format($detail->nilai_ncf, 2) }}</span>
+                                            </div>
+                                            <div class="w-full h-1.5 bg-slate-200 rounded-full overflow-hidden">
+                                                <div class="h-full bg-emerald-500" style="width: {{ ($detail->nilai_ncf / 5) * 100 }}%"></div>
+                                            </div>
                                         </div>
-                                    </template>
-                                    
-                                    <template x-if="insightText">
-                                        <div class="mt-2 text-sm text-slate-700 bg-white/60 p-3 rounded border border-emerald-100" x-html="insightText.replace(/\n/g, '<br>').replace(/\*\*(.*?)\*\*/g, '<b>$1</b>').replace(/\*(.*?)\*/g, '<i>$1</i>')"></div>
-                                    </template>
+                                        <div class="p-3 bg-slate-50/80 rounded-lg border border-slate-100 flex flex-col justify-center">
+                                            <div class="flex justify-between items-center mb-1.5">
+                                                <span class="font-bold text-slate-700">Performa Secondary Factor (NSF)</span>
+                                                <span class="font-bold text-slate-500 text-xs">{{ number_format($detail->nilai_nsf, 2) }}</span>
+                                            </div>
+                                            <div class="w-full h-1.5 bg-slate-200 rounded-full overflow-hidden">
+                                                <div class="h-full bg-slate-400" style="width: {{ ($detail->nilai_nsf / 5) * 100 }}%"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    {{-- AI Insight Section --}}
+                                    <div class="mt-4 p-4 md:p-5 rounded-xl bg-gradient-to-br from-emerald-50 to-teal-50 border border-emerald-100/80 shadow-inner relative overflow-hidden">
+                                        <div class="absolute top-0 right-0 -mt-4 -mr-4 text-emerald-500/10 transform rotate-12">
+                                            <i class="fas fa-sparkles text-8xl"></i>
+                                        </div>
+                                        
+                                        <div class="relative z-10">
+                                            <div class="flex items-center gap-2 mb-2">
+                                                <i class="fas fa-magic text-emerald-500"></i>
+                                                <span class="text-xs font-bold text-emerald-700 uppercase tracking-widest">Catatan Analisis</span>
+                                            </div>
+                                            <div class="prose prose-sm prose-slate max-w-none prose-p:text-xs prose-p:md:text-sm prose-p:leading-relaxed prose-p:m-0 prose-strong:text-slate-800">
+                                                {!! Str::markdown($detail->ai_insight) !!}
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                @endforeach
+                    @endforeach
+                </div>
                 </div>
             </div>
 

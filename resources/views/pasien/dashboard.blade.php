@@ -12,34 +12,43 @@
                     <p class="text-[10px] sm:text-xs text-slate-500 hidden sm:block truncate">Ringkasan kesehatan dan status gizi harian Anda.</p>
                 </div>
             </div>
-            <div class="hidden sm:flex shrink-0 items-center bg-white px-4 py-1.5 rounded-full shadow-sm border border-slate-100">
-                <span class="text-[10px] text-slate-400 uppercase tracking-widest mr-2">Halo,</span>
-                <span class="text-xs font-bold text-emerald-600">{{ Auth::user()->name }}</span>
+            <div class="hidden sm:flex shrink-0 items-center bg-emerald-50 px-4 py-1.5 rounded-full shadow-sm border border-emerald-100">
+                <span class="text-[10px] text-emerald-600/70 uppercase tracking-widest mr-2">Halo,</span>
+                <span class="text-xs font-bold text-emerald-700">{{ Auth::user()->name }}</span>
             </div>
         </div>
     </x-slot>
 
-    <div class="py-6">
+    <div class="-mt-2 lg:-mt-6 pb-6">
         <div class="max-w-7xl mx-auto space-y-6">
             {{-- Kebutuhan Gizi & Ringkasan --}}
             @if($profil)
                 <div class="bg-white border border-slate-200 rounded-lg shadow-sm overflow-hidden">
-                    <div class="p-6 border-b border-slate-100 flex flex-col md:flex-row md:justify-between md:items-center bg-slate-50 gap-4">
-                        <div class="flex items-center gap-4">
-                            <div class="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center flex-shrink-0">
-                                <i class="fas fa-clipboard-list text-xl"></i>
-                            </div>
-                            <div>
-                                <h3 class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Kebutuhan Gizi & Kandungan Harian</h3>
-                                <div class="flex items-center gap-2 mt-1">
-                                    <span class="text-sm font-bold text-slate-800">Status: Terdaftar Lengkap</span>
-                                    <i class="fas fa-check-circle text-emerald-500 text-xs"></i>
+                    <div class="p-4 md:p-6 border-b border-slate-100 bg-slate-50/50">
+                        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
+                            <div class="flex items-center gap-3 md:gap-4">
+                                <div class="w-10 h-10 md:w-12 md:h-12 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center flex-shrink-0 shadow-inner">
+                                    <i class="fas fa-clipboard-list text-sm md:text-xl"></i>
+                                </div>
+                                <div>
+                                    <h3 class="text-[10px] md:text-[11px] font-bold text-slate-500 uppercase tracking-widest leading-tight mb-0.5">Kebutuhan Gizi Harian</h3>
+                                    <div class="flex items-center gap-1.5">
+                                        <i class="fas fa-check-circle text-emerald-500 text-[10px] md:text-xs"></i>
+                                        <span class="text-xs md:text-sm font-bold text-slate-700">Profil Lengkap</span>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="text-left md:text-right">
-                            <span class="block text-3xl font-bold text-slate-800">{{ number_format($profil->kebutuhan_kalori ?? 0) }}</span>
-                            <span class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Total Kalori (Kkal)</span>
+                            
+                            <div class="flex items-end justify-between sm:block border-t border-slate-200/60 pt-3 sm:border-0 sm:pt-0 sm:text-right">
+                                <div class="sm:hidden">
+                                    <span class="text-[9px] font-bold text-slate-400 uppercase tracking-widest block mb-0.5">Total Kalori</span>
+                                    <span class="text-[10px] font-semibold text-slate-500">Kkal / Hari</span>
+                                </div>
+                                <div class="text-right">
+                                    <span class="block text-2xl md:text-3xl font-black text-slate-800 tracking-tight leading-none">{{ number_format($profil->kebutuhan_kalori ?? 0) }}</span>
+                                    <span class="hidden sm:block text-[9px] md:text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-1.5">Total Kalori (Kkal)</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     
@@ -237,6 +246,14 @@
 
                 {{-- Sidebar --}}
                 <div class="space-y-6">
+                    {{-- Quick Tips --}}
+                    <div class="bg-slate-800 rounded-lg p-6 text-white shadow-lg">
+                        <h4 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Tips Hari Ini</h4>
+                        <p class="text-xs text-slate-300 italic leading-relaxed">
+                            "Batasi konsumsi jeroan, boga bahari (seafood), dan daging merah untuk menjaga kadar asam urat Anda tetap stabil."
+                        </p>
+                    </div>
+
                     {{-- Profil Card --}}
                     <div class="bg-white border border-slate-200 rounded-lg shadow-sm overflow-hidden">
                         <div class="h-2 bg-emerald-600"></div>
@@ -281,14 +298,6 @@
                                 </a>
                             </div>
                         </div>
-                    </div>
-
-                    {{-- Quick Tips --}}
-                    <div class="bg-slate-800 rounded-lg p-6 text-white shadow-lg">
-                        <h4 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Tips Hari Ini</h4>
-                        <p class="text-xs text-slate-300 italic leading-relaxed">
-                            "Batasi konsumsi jeroan, boga bahari (seafood), dan daging merah untuk menjaga kadar asam urat Anda tetap stabil."
-                        </p>
                     </div>
                 </div>
             </div>

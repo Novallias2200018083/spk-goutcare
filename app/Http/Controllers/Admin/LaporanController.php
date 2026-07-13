@@ -12,7 +12,16 @@ class LaporanController extends Controller
     // 1. Menampilkan halaman daftar riwayat seluruh pasien dengan fitur filter
     public function index(Request $request)
     {
+        $search = $request->input('search');
         $query = RiwayatRekomendasi::with(['user', 'detailRiwayats.makanan'])->latest();
+
+        // Fitur Pencarian (Search)
+        if ($search) {
+            $query->whereHas('user', function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('email', 'like', "%{$search}%");
+            });
+        }
 
         // Fitur Filter Berdasarkan Tanggal
         if ($request->filled('tanggal_awal') && $request->filled('tanggal_akhir')) {
@@ -22,9 +31,9 @@ class LaporanController extends Controller
             $query->whereBetween('tanggal_rekomendasi', [$tanggal_awal, $tanggal_akhir]);
         }
 
-        $laporans = $query->get();
+        $laporans = $query->paginate(10)->withQueryString();
 
-        return view('admin.laporan.index', compact('laporans'));
+        return view('admin.laporan.index', compact('laporans', 'search'));
     }
 
     // 2. Fitur Cetak Laporan (Print / Simpan ke PDF bawaan browser)

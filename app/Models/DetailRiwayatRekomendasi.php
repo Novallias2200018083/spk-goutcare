@@ -35,7 +35,7 @@ class DetailRiwayatRekomendasi extends Model
         $makanan = $this->makanan;
         $profil = $this->riwayat->user->profilPasien ?? null;
         
-        if (!$makanan || !$profil) return "Insight AI tidak tersedia karena data profil atau makanan tidak lengkap.";
+        if (!$makanan || !$profil) return "Insight tidak tersedia karena data profil atau makanan tidak lengkap.";
 
         // Cari kadar purin makanan
         $purinItem = $makanan->nilaiKriterias->first(function($nk) {
@@ -48,17 +48,17 @@ class DetailRiwayatRekomendasi extends Model
 
         // Pengecekan mutlak medis (Purin melebihi batas)
         if ($purinMakanan > $toleransiPurin) {
-            $insight = "⚠️ **Peringatan AI:** Meskipun sistem memberikan skor kecocokan gizi " . number_format($this->nilai_akhir, 2) . ", makanan ini **Sangat Berbahaya** dan **Tidak Direkomendasikan** untuk kondisi Anda saat ini. ";
+            $insight = "**Peringatan :** Meskipun sistem memberikan skor kecocokan gizi " . number_format($this->nilai_akhir, 2) . ", makanan ini **Sangat Berbahaya** dan **Tidak Direkomendasikan** untuk kondisi Anda saat ini. ";
             $insight .= "Alasan utamanya adalah kandungan purinnya (" . $purinMakanan . " mg) telah melewati batas maksimal toleransi harian Anda (" . $toleransiPurin . " mg). Mengonsumsi ini sangat berisiko memicu pembengkakan/serangan Asam Urat (Gout).";
         } 
         // Jika Purin Aman, cek status dari sistem Profile Matching
         else {
             $status = strtolower($this->status_kelayakan);
             if (str_contains($status, 'tidak') || str_contains($status, 'kurang')) {
-                $insight = "💡 **Analisis AI:** Makanan ini **" . $this->status_kelayakan . "** untuk Anda. ";
+                $insight = "**HASIL ANALISIS :** Makanan ini **" . $this->status_kelayakan . "** untuk Anda. ";
                 $insight .= "Meskipun kandungan purinnya (" . $purinMakanan . " mg) sebenarnya aman (batas: " . $toleransiPurin . " mg), namun komposisi gizi lainnya (Kalori, Lemak, atau Karbohidrat) sangat jauh meleset dari profil kebutuhan ideal Anda (Skor kecocokan hanya " . number_format($this->nilai_akhir, 2) . ").";
             } else {
-                $insight = "✨ **Analisis AI:** Makanan ini **" . $this->status_kelayakan . "**! ";
+                $insight = "**HASIL ANALISIS :** Makanan ini **" . $this->status_kelayakan . "**! ";
                 $insight .= "Kandungan purinnya (" . $purinMakanan . " mg) berada di zona aman (batas Anda: " . $toleransiPurin . " mg). ";
                 
                 if ($this->nilai_ncf >= 4.0 && $this->nilai_nsf >= 4.0) {

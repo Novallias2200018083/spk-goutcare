@@ -18,12 +18,20 @@
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
 
+        <!-- SweetAlert2 -->
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
         <style>
             body { font-family: 'Inter', sans-serif; }
             [x-cloak] { display: none !important; }
         </style>
     </head>
-    <body class="antialiased bg-slate-50 text-slate-900" x-data="{ sidebarOpen: false }">
+    <body class="antialiased bg-slate-50 text-slate-900" 
+          x-data="{ 
+              sidebarOpen: localStorage.getItem('sidebarOpen') !== null ? localStorage.getItem('sidebarOpen') === 'true' : window.innerWidth >= 768,
+              isLoaded: false
+          }"
+          x-init="$watch('sidebarOpen', value => localStorage.setItem('sidebarOpen', value)); setTimeout(() => isLoaded = true, 100)">
         <div class="flex h-screen overflow-hidden">
             
             {{-- Sidebar --}}
@@ -37,8 +45,8 @@
                     <div class="px-4 sm:px-6 lg:px-8">
                         <div class="flex items-center justify-between h-12 sm:h-14">
                             
-                            {{-- Mobile Hamburger --}}
-                            <div class="flex lg:hidden mr-4">
+                            {{-- Mobile Hamburger (Hidden on Desktop) --}}
+                            <div class="flex mr-3 sm:mr-4 transition-all md:hidden">
                                 <button @click.stop="sidebarOpen = !sidebarOpen" class="w-10 h-10 flex items-center justify-center rounded-xl bg-slate-50 text-slate-600 border border-slate-200 shadow-sm hover:bg-emerald-50 hover:text-emerald-600 hover:border-emerald-200 focus:outline-none transition-all">
                                     <i class="fas fa-bars text-lg"></i>
                                 </button>
@@ -54,7 +62,7 @@
                             </div>
 
                             {{-- Header Right --}}
-                            <div class="flex items-center space-x-4 pl-4">
+                            <div class="flex items-center space-x-4 pl-1 sm:pl-4">
                                 @auth
                                     <div class="flex flex-col items-end hidden sm:flex">
                                         <span class="text-[13px] font-bold text-slate-800 leading-tight">{{ Auth::user()->name }}</span>

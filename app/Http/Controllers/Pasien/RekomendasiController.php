@@ -50,36 +50,36 @@ class RekomendasiController extends Controller
             if (str_contains($kName, 'purin')) {
                 if (strtolower($profil->fase_asam_urat) == 'akut') { 
                     $skala = $aturans['target_purin_akut'] ?? 4; $label = 'Disesuaikan (Akut)'; 
-                    $alasan = 'Kondisi fase Akut (kambuh).';
+                    $alasan = 'Fase kambuh menuntut pembatasan purin ekstra ketat (skala tinggi/sangat dibatasi).';
                 } else { 
                     $skala = $aturans['target_purin_normal'] ?? 3; $label = 'Disesuaikan (Normal)'; 
-                    $alasan = 'Fase Normal (pemeliharaan).';
+                    $alasan = 'Fase pemeliharaan; toleransi purin moderat.';
                 }
             } elseif (str_contains($kName, 'kalori')) {
                 if ($imt < 18.5) { 
                     $skala = $aturans['target_kalori_kurus'] ?? 2; $label = 'Disesuaikan (Kurus)'; 
-                    $alasan = 'IMT Kurus (< 18.5).';
+                    $alasan = 'IMT Kurus: Target kalori dinaikkan untuk mencapai berat ideal.';
                 } elseif ($imt >= 25) { 
                     $skala = $aturans['target_kalori_obesitas'] ?? 4; $label = 'Disesuaikan (Obesitas)'; 
-                    $alasan = 'IMT Obesitas (>= 25).';
+                    $alasan = 'IMT Obesitas: Target kalori ditekan (defisit) untuk penurunan berat.';
                 } else { 
                     $skala = $aturans['target_kalori_normal'] ?? 3; $label = 'Disesuaikan (Normal)'; 
-                    $alasan = 'IMT Normal.';
+                    $alasan = 'IMT Normal: Target kalori pemeliharaan (maintenance).';
                 }
             } elseif (str_contains($kName, 'lemak')) {
                 if ($imt >= 25) { 
                     $skala = $aturans['target_lemak_obesitas'] ?? 4; $label = 'Disesuaikan (Obesitas)'; 
-                    $alasan = 'IMT Obesitas (>= 25).';
+                    $alasan = 'IMT Obesitas: Asupan lemak harian dibatasi lebih ketat.';
                 } else { 
                     $skala = $aturans['target_lemak_normal'] ?? 3; $label = 'Disesuaikan (Normal)'; 
-                    $alasan = 'IMT Normal/Kurus.';
+                    $alasan = 'Asupan lemak proporsional standar (20-25% kalori).';
                 }
             } elseif (str_contains($kName, 'protein')) {
                 $skala = $aturans['target_protein_default'] ?? 3; $label = 'Disesuaikan';
-                $alasan = 'Kebutuhan standar otot.';
+                $alasan = 'Proporsi ideal untuk pemeliharaan massa otot.';
             } elseif (str_contains($kName, 'karbohidrat')) {
                 $skala = $aturans['target_karbohidrat_default'] ?? 3; $label = 'Disesuaikan';
-                $alasan = 'Kebutuhan standar kalori.';
+                $alasan = 'Sumber energi utama (60-65% dari total kalori).';
             }
 
             // Nilai asli harian dari profil pasien
@@ -164,17 +164,14 @@ class RekomendasiController extends Controller
                 $targetSkala[$k->id] = $skala;
             }
 
-            $sumber = $request->input('sumber_makanan', ['sistem']); // default ke sistem jika kosong
-            $makanans = Makanan::where(function($query) use ($user, $sumber) {
-                                   if (in_array('sistem', $sumber)) {
-                                       $query->orWhere('is_user_input', false);
-                                   }
-                                   if (in_array('pribadi', $sumber)) {
-                                       $query->orWhere(function($q) use ($user) {
-                                           $q->where('is_user_input', true)->where('user_id', $user->id);
-                                       });
-                                   }
-                               })
+            $selectedMakananIds = $request->input('selected_makanan', []); // ID makanan yang dicentang user
+
+            if (empty($selectedMakananIds)) {
+                DB::rollBack();
+                return back()->with('error', 'Pilih (centang) minimal satu makanan untuk mulai simulasi.');
+            }
+
+            $makanans = Makanan::whereIn('id', $selectedMakananIds)
                                ->with('nilaiKriterias')
                                ->get();
 
@@ -228,7 +225,7 @@ class RekomendasiController extends Controller
 
             if ($makanans->isEmpty()) {
                 DB::rollBack();
-                return back()->with('error', 'Pilih minimal satu sumber makanan (Sistem / Pribadi) yang memiliki data makanan.');
+                return back()->with('error', 'Makanan yang dipilih tidak ditemukan di database.');
             }
 
             $riwayat = RiwayatRekomendasi::create([

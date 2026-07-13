@@ -12,13 +12,19 @@ use Illuminate\Support\Facades\DB;
 class MakananController extends Controller
 {
     // 1. Menampilkan daftar makanan (Hanya yang bukan inputan user/pasien)
-    public function index()
+    public function index(Request $request)
     {
+        $search = $request->input('search');
+
         $makanans = Makanan::where('is_user_input', false)
+            ->when($search, function ($query) use ($search) {
+                $query->where('nama_makanan', 'like', "%{$search}%");
+            })
             ->with('nilaiKriterias.kriteria') // Load relasi agar efisien
             ->latest()
-            ->get();
-        return view('admin.makanan.index', compact('makanans'));
+            ->paginate(10)->withQueryString();
+            
+        return view('admin.makanan.index', compact('makanans', 'search'));
     }
 
     // 2. Menampilkan form tambah makanan

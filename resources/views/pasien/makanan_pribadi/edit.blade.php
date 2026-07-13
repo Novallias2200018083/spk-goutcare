@@ -1,15 +1,20 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex items-center gap-3 w-full overflow-hidden">
-            <a href="{{ route('pasien.makanan_pribadi.index') }}" class="shrink-0 w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 hover:bg-slate-200 hover:text-slate-700 transition-colors shadow-inner">
-                <i class="fas fa-arrow-left sm:text-lg"></i>
-            </a>
-            <div class="overflow-hidden">
-                <h2 class="font-bold text-lg sm:text-xl text-slate-800 tracking-tight truncate">
-                    Edit Makanan Pribadi
-                </h2>
-                <p class="text-[10px] sm:text-xs text-slate-500 hidden sm:block truncate">Perbarui informasi gizi menu makanan Anda.</p>
+        <div class="flex justify-between items-center w-full gap-3">
+            <div class="flex items-center gap-3 overflow-hidden">
+                <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600 shadow-inner shrink-0">
+                    <i class="fas fa-pen sm:text-lg"></i>
+                </div>
+                <div class="overflow-hidden">
+                    <h2 class="font-bold text-lg sm:text-xl text-slate-800 tracking-tight truncate">
+                        Edit Makanan Pribadi
+                    </h2>
+                    <p class="text-[10px] sm:text-xs text-slate-500 hidden sm:block truncate">Perbarui informasi gizi menu makanan Anda.</p>
+                </div>
             </div>
+            <a href="{{ route('pasien.makanan_pribadi.index') }}" class="shrink-0 inline-flex items-center justify-center w-8 h-8 sm:w-auto sm:h-auto sm:px-4 sm:py-2 bg-emerald-50 text-emerald-700 rounded-full text-[10px] sm:text-xs font-bold uppercase tracking-widest hover:bg-emerald-100 transition-colors shadow-sm border border-emerald-100 ml-auto">
+                <i class="fas fa-arrow-left sm:mr-2"></i> <span class="hidden sm:inline">Kembali</span>
+            </a>
         </div>
     </x-slot>
 
@@ -45,6 +50,7 @@
                             {{-- Kandungan Nutrisi --}}
                             <div class="space-y-4">
                                 <h3 class="text-sm font-bold text-slate-400 uppercase tracking-widest border-b border-slate-100 pb-2">Kandungan Nutrisi</h3>
+                                <p class="text-xs text-slate-500 mb-4 italic">Masukkan nilai nutrisi <span class="font-bold text-emerald-600">per takaran 100 gram (100g)</span> makanan.</p>
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     @foreach ($kriterias as $kriteria)
                                         <div class="p-4 border border-slate-100 rounded bg-slate-50/50">

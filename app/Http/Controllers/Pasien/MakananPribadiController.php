@@ -15,8 +15,14 @@ class MakananPribadiController extends Controller
     // 1. Menampilkan daftar makanan khusus milik user yang sedang login
     public function index()
     {
-        $makanans = Auth::user()->makananCustom()->with('nilaiKriterias.kriteria')->latest()->paginate(10);
-        return view('pasien.makanan_pribadi.index', compact('makanans'));
+        $kriterias = Kriteria::all();
+        $makanansPribadi = Auth::user()->makananCustom()->with('nilaiKriterias.kriteria')->latest()->get();
+        $makanansSistem = Makanan::where('is_user_input', false)->with('nilaiKriterias.kriteria')->latest()->get();
+        
+        // Gabung keduanya
+        $makanans = $makanansSistem->concat($makanansPribadi);
+
+        return view('pasien.makanan_pribadi.index', compact('makanans', 'kriterias'));
     }
 
     // 2. Form tambah makanan pribadi
@@ -55,9 +61,15 @@ class MakananPribadiController extends Controller
             }
 
             DB::commit();
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json(['success' => true, 'message' => 'Makanan pribadi berhasil ditambahkan.']);
+            }
             return redirect()->route('pasien.makanan_pribadi.index')->with('success', 'Makanan pribadi berhasil ditambahkan.');
         } catch (\Exception $e) {
             DB::rollback();
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json(['success' => false, 'message' => 'Terjadi kesalahan: ' . $e->getMessage()], 500);
+            }
             return back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
     }
@@ -99,9 +111,15 @@ class MakananPribadiController extends Controller
             }
 
             DB::commit();
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json(['success' => true, 'message' => 'Makanan pribadi berhasil diperbarui.']);
+            }
             return redirect()->route('pasien.makanan_pribadi.index')->with('success', 'Makanan pribadi berhasil diperbarui.');
         } catch (\Exception $e) {
             DB::rollback();
+            if ($request->ajax() || $request->wantsJson()) {
+                return response()->json(['success' => false, 'message' => 'Terjadi kesalahan: ' . $e->getMessage()], 500);
+            }
             return back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
     }
@@ -112,6 +130,10 @@ class MakananPribadiController extends Controller
         // Pastikan hanya bisa menghapus makanannya sendiri
         $makanan = Makanan::where('id', $id)->where('user_id', Auth::id())->firstOrFail();
         $makanan->delete(); 
+        
+        if (request()->ajax() || request()->wantsJson()) {
+            return response()->json(['success' => true, 'message' => 'Makanan pribadi berhasil dihapus.']);
+        }
         
         return redirect()->route('pasien.makanan_pribadi.index')->with('success', 'Makanan pribadi berhasil dihapus.');
     }

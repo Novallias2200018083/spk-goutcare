@@ -16,6 +16,11 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'role' => CheckRole::class,
         ]);
+        
+        // Pengecualian CSRF agar tidak 419 saat sesi lama
+        $middleware->validateCsrfTokens(except: [
+            'pasien/rekomendasi/hitung'
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //
