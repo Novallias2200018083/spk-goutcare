@@ -274,24 +274,23 @@ class RekomendasiController extends Controller
                 // Pastikan nilai akhir dihitung dengan benar
                 $nilaiAkhir = ($persentaseNcf * $ncf) + ($persentaseNsf * $nsf);
 
-                // Tentukan Status Kelayakan berdasarkan Profile Matching
-                $status = 'Kurang Direkomendasikan';
-                if ($nilaiAkhir >= 4.5) $status = 'Sangat Direkomendasikan';
-                elseif ($nilaiAkhir >= 3.8) $status = 'Direkomendasikan';
-                elseif ($nilaiAkhir >= 3.0) $status = 'Cukup Direkomendasikan';
-
-                // Terapkan Filter Medis Absolut (Toleransi Purin per Porsi)
-                // Asumsi standar 3x makan sehari untuk porsi batas bahaya
-                $tPurin = $profil->toleransi_purin / 3;
+                // Cari nilai Purin Makanan
+                $tPurin = $profil->toleransi_purin;
                 $purinKriteria = $kriterias->where('nama_kriteria', 'Kandungan Purin')->first();
+                $purinVal = 0;
                 if ($purinKriteria) {
                     $nilaiPurinMakanan = $makanan->nilaiKriterias->where('kriteria_id', $purinKriteria->id)->first();
                     $purinVal = $nilaiPurinMakanan ? $nilaiPurinMakanan->nilai : 0;
-                    if ($purinVal > $tPurin) {
-                        $status = 'Tidak Direkomendasikan (Bahaya)';
-                        // Kita TETAP menyimpannya dengan nilai akhir aslinya, tidak dihancurkan ke -999
-                        // agar pasien bisa melihat bahwa makanan ini bergizi tapi BAHAYA.
-                    }
+                }
+
+                // Tentukan Status Kelayakan (Aturan Mutlak)
+                if ($nilaiAkhir < 3.5 || $purinVal > $tPurin) {
+                    $status = 'BAHAYA / TIDAK DIREKOMENDASIKAN';
+                } elseif ($nilaiAkhir >= 4.0) {
+                    $status = 'SANGAT DIREKOMENDASIKAN';
+                } else {
+                    // Jika Skor Akhir 3.5 - 3.9
+                    $status = 'CUKUP DIREKOMENDASIKAN';
                 }
 
                 DetailRiwayatRekomendasi::create([

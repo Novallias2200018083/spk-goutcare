@@ -20,9 +20,16 @@ class AiInsightController extends Controller
         $makanan = $detail->makanan;
         $profil = $detail->riwayat->user->profilPasien;
 
+        $purinItem = $makanan->nilaiKriterias->first(function($nk) {
+            return str_contains(strtolower($nk->kriteria->nama_kriteria), 'purin');
+        });
+        $purin = $purinItem ? $purinItem->nilai : 0;
+        $skor_akhir = $detail->nilai_akhir;
+        $batas_pasien = $profil->toleransi_purin;
+
         // Siapkan Prompt untuk dikirim ke AI Eksternal (Gemini / OpenAI)
         $prompt = "Kamu adalah ahli gizi spesialis penyakit Asam Urat (Gout). "
-                . "Pasien memiliki batas toleransi purin " . $profil->toleransi_purin . " mg, "
+                . "Pasien memiliki batas toleransi purin " . $batas_pasien . " mg, "
                 . "butuh " . $profil->kebutuhan_kalori . " kalori, dan " . $profil->kebutuhan_protein . " gram protein harian.\n"
                 . "Pasien ingin makan '" . $makanan->nama_makanan . "' yang mengandung ";
         
@@ -30,8 +37,13 @@ class AiInsightController extends Controller
             $prompt .= $nk->nilai . " " . $nk->kriteria->nama_kriteria . ", ";
         }
 
-        $prompt .= "Berdasarkan sistem SPK, makanan ini berstatus '" . $detail->status_kelayakan . "'.\n"
-                 . "Tolong berikan analisis singkat (maksimal 3 kalimat) dengan gaya bahasa yang empati, profesional, dan mudah dipahami pasien, mengapa makanan ini direkomendasikan atau dilarang. Gunakan format markdown tebal untuk penekanan.";
+        $prompt .= "\nAturan mutlak:\n"
+                 . "1. Nilai skor maksimal adalah 5.0.\n"
+                 . "2. Jika Skor Akhir >= 4.0, maka makanan ini SANGAT DIREKOMENDASIKAN karena profil gizi sangat cocok.\n"
+                 . "3. Jika Skor Akhir 3.5 - 3.9, makanan ini CUKUP DIREKOMENDASIKAN.\n"
+                 . "4. Jika Skor Akhir < 3.5 ATAU Purin > Batas Pasien, makanan ini BAHAYA / TIDAK DIREKOMENDASIKAN karena jauh meleset.\n"
+                 . "Sekarang buat narasinya untuk makanan dengan purin " . $purin . " dan skor " . number_format($skor_akhir, 2) . ".\n"
+                 . "Tolong berikan analisis komprehensif (maksimal 5 kalimat) dengan gaya bahasa yang sangat empati, profesional, dan memberikan edukasi yang menenangkan pasien. Jelaskan mengapa makanan ini direkomendasikan atau dilarang secara detail sesuai aturan di atas. Gunakan format markdown tebal untuk penekanan dan buat hasilnya terlihat sangat bagus.";
 
         // CONTOH INTEGRASI MENGGUNAKAN GOOGLE GEMINI API
         $apiKey = env('GEMINI_API_KEY'); // Pastikan kunci API diisi di file .env

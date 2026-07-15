@@ -212,6 +212,16 @@ class SpkService
                 // Biarkan skor aslinya tetap terlihat untuk transparansi
                 $finalScore = $pmScore; 
             }
+            
+            // Aturan Mutlak
+            if (!$isLayak || $finalScore < 3.5) {
+                $statusLayak = 'BAHAYA / TIDAK DIREKOMENDASIKAN';
+            } elseif ($finalScore >= 4.0) {
+                $statusLayak = 'SANGAT DIREKOMENDASIKAN';
+            } else {
+                // Skor Akhir 3.5 - 3.9
+                $statusLayak = 'CUKUP DIREKOMENDASIKAN';
+            }
 
             $finalRecommendations->push([
                 'makanan_obj' => $originalFoodItem,
@@ -220,8 +230,8 @@ class SpkService
                 'nilai_saw' => 0, // Dihapus
                 'nilai_profile_matching' => $pmScore,
                 'final_score' => $finalScore,
-                'is_layak' => $isLayak,
-                'status_layak' => $isLayak ? 'Sangat Direkomendasikan' : 'Tidak Direkomendasikan (Purin Tinggi)',
+                'is_layak' => ($isLayak && $finalScore >= 3.5),
+                'status_layak' => $statusLayak,
             ]);
         }
 

@@ -14,6 +14,8 @@ class DatabaseSeeder extends Seeder
             ProfileMatchingSeeder::class,
             MakananSeeder::class,
             UserSeeder::class, 
+            MakananTambahanSeeder::class,
+            PasienBaruSeeder::class,
         ]);
     }
 }

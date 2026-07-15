@@ -46,28 +46,30 @@ class DetailRiwayatRekomendasi extends Model
         $toleransiPurin = $profil->toleransi_purin;
         $insight = "";
 
-        // Pengecekan mutlak medis (Purin melebihi batas)
-        if ($purinMakanan > $toleransiPurin) {
-            $insight = "**Peringatan :** Meskipun sistem memberikan skor kecocokan gizi " . number_format($this->nilai_akhir, 2) . ", makanan ini **Sangat Berbahaya** dan **Tidak Direkomendasikan** untuk kondisi Anda saat ini. ";
-            $insight .= "Alasan utamanya adalah kandungan purinnya (" . $purinMakanan . " mg) telah melewati batas maksimal toleransi harian Anda (" . $toleransiPurin . " mg). Mengonsumsi ini sangat berisiko memicu pembengkakan/serangan Asam Urat (Gout).";
+        // Pengecekan mutlak medis (Purin melebihi batas) atau skor kurang dari 3.5
+        if ($purinMakanan > $toleransiPurin || $this->nilai_akhir < 3.5) {
+            $insight = "⚠️ **ANALISIS KRITIS : STATUS BAHAYA**\n\n";
+            $insight .= "Makanan ini **SANGAT TIDAK DIREKOMENDASIKAN** untuk Anda konsumsi. ";
+            if ($purinMakanan > $toleransiPurin) {
+                $insight .= "Terdapat **kandungan purin yang terlampau tinggi (" . $purinMakanan . " mg)**, menembus batas maksimal toleransi harian tubuh Anda (" . $toleransiPurin . " mg). ";
+            }
+            if ($this->nilai_akhir < 3.5) {
+                $insight .= "Selain itu, profil makronutrisi makanan ini **sangat meleset** dari angka ideal yang dibutuhkan oleh fisik Anda (Skor kecocokan hanya " . number_format($this->nilai_akhir, 2) . " / 5.0). ";
+            }
+            $insight .= "Memaksakan untuk mengonsumsi menu ini memiliki probabilitas tinggi untuk **memicu penumpukan kristal asam urat, pembengkakan sendi, dan serangan gout akut**. Mohon hindari menu ini demi kesehatan Anda.";
         } 
-        // Jika Purin Aman, cek status dari sistem Profile Matching
+        // Jika Purin Aman dan Skor >= 3.5
         else {
-            $status = strtolower($this->status_kelayakan);
-            if (str_contains($status, 'tidak') || str_contains($status, 'kurang')) {
-                $insight = "**HASIL ANALISIS :** Makanan ini **" . $this->status_kelayakan . "** untuk Anda. ";
-                $insight .= "Meskipun kandungan purinnya (" . $purinMakanan . " mg) sebenarnya aman (batas: " . $toleransiPurin . " mg), namun komposisi gizi lainnya (Kalori, Lemak, atau Karbohidrat) sangat jauh meleset dari profil kebutuhan ideal Anda (Skor kecocokan hanya " . number_format($this->nilai_akhir, 2) . ").";
+            if ($this->nilai_akhir >= 4.0) {
+                $insight = "✨ **ANALISIS OPTIMAL : SANGAT DIREKOMENDASIKAN**\n\n";
+                $insight .= "Berita baik! Makanan ini merupakan **pilihan menu yang luar biasa sehat dan sangat selaras** dengan kondisi tubuh Anda. ";
+                $insight .= "Kandungan purinnya yang sebesar **" . $purinMakanan . " mg** masih berada dalam teritori yang sangat aman (Toleransi Anda: " . $toleransiPurin . " mg). ";
+                $insight .= "Sistem mencatat tingkat kecocokan gizi yang **sangat baik (Skor: " . number_format($this->nilai_akhir, 2) . " / 5.0)**, memastikan tubuh Anda mendapatkan asupan energi dan nutrisi yang pas tanpa berisiko menaikkan kadar asam urat secara drastis. Silakan nikmati menu ini dengan tenang!";
             } else {
-                $insight = "**HASIL ANALISIS :** Makanan ini **" . $this->status_kelayakan . "**! ";
-                $insight .= "Kandungan purinnya (" . $purinMakanan . " mg) berada di zona aman (batas Anda: " . $toleransiPurin . " mg). ";
-                
-                if ($this->nilai_ncf >= 4.0 && $this->nilai_nsf >= 4.0) {
-                    $insight .= "Hebatnya lagi, makanan ini memiliki kecocokan Faktor Utama (Protein) dan Faktor Pendukung (Kalori/Lemak) yang nyaris sempurna dengan profil gizi Anda (Skor PM: " . number_format($this->nilai_akhir, 2) . "). Ini adalah pilihan diet harian yang sangat cerdas.";
-                } elseif ($this->nilai_ncf >= 4.0) {
-                    $insight .= "Makanan ini direkomendasikan karena kecocokan Core Factor-nya kuat (Nilai NCF: " . number_format($this->nilai_ncf, 2) . "), artinya asupan protein dan batas purin harian Anda dapat terjaga dengan baik.";
-                } else {
-                    $insight .= "Secara keseluruhan, makanan ini adalah alternatif yang aman dan cukup baik menyeimbangkan asupan gizi harian Anda berdasarkan kalkulasi Profile Matching.";
-                }
+                $insight = "✅ **ANALISIS MODERAT : CUKUP DIREKOMENDASIKAN**\n\n";
+                $insight .= "Makanan ini adalah opsi yang **cukup baik dan relatif aman** sebagai alternatif harian Anda. ";
+                $insight .= "Dengan angka purin **" . $purinMakanan . " mg**, makanan ini tidak akan melewati ambang batas maksimal Anda (" . $toleransiPurin . " mg). ";
+                $insight .= "Secara keseluruhan komposisi gizi, makanan ini terbilang cukup seimbang (Skor: " . number_format($this->nilai_akhir, 2) . " / 5.0). Meski bukan opsi yang paling sempurna mutlak, makanan ini sangat ideal dikonsumsi dalam porsi wajar tanpa memprovokasi serangan gout Anda.";
             }
         }
 

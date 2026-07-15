@@ -79,7 +79,7 @@
                                 </div>
                                 <!-- Mobile Info Button -->
                                 <button type="button" @click.stop="$dispatch('open-info-modal')" class="sm:hidden w-fit text-[10px] bg-emerald-500/20 text-emerald-300 hover:bg-emerald-500/40 px-3 py-1.5 rounded-full font-bold flex items-center transition-colors border border-emerald-500/30 shadow-sm focus:outline-none">
-                                    <i class="fas fa-info-circle mr-1.5"></i> Detail Rumus AI
+                                    <i class="fas fa-info-circle mr-1.5"></i> Detail Rumus
                                 </button>
                             </div>
 
