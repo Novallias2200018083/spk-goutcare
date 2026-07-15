@@ -13,4 +13,19 @@
             console.log("Service worker has been registered for scope: " + reg.scope);
         });
     }
+
+    // PWA Pull-to-Refresh Logic
+    let pwaTouchstartY = 0;
+    document.addEventListener('touchstart', e => {
+        if (window.scrollY === 0) pwaTouchstartY = e.touches[0].clientY;
+    }, {passive: true});
+    
+    document.addEventListener('touchend', e => {
+        if (window.scrollY === 0 && e.changedTouches[0].clientY - pwaTouchstartY > 150) {
+            // Check if it's running as PWA (standalone)
+            if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true) {
+                location.reload();
+            }
+        }
+    }, {passive: true});
 </script>

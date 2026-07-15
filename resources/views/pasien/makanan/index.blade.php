@@ -53,8 +53,10 @@
                     @endforeach
                 </div>
 
-                <div class="mt-8">
-                    {{ $makanans->appends(request()->input())->links() }}
+                <div class="mt-8 overflow-x-auto pb-2 px-2 sm:px-0">
+                    <div class="min-w-max">
+                        {{ $makanans->onEachSide(1)->appends(request()->input())->links() }}
+                    </div>
                 </div>
             @endif
         </div>
