@@ -16,6 +16,7 @@
         .content-area { width: 100%; }
         .navbar-custom { background-color: #fff; box-shadow: 0 2px 4px rgba(0,0,0,.08); }
     </style>
+    @include('components.pwa-tags')
 </head>
 <body class="d-flex">
 

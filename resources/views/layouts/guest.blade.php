@@ -54,7 +54,8 @@
                 z-index: -1;
             }
         </style>
-    </head>
+        @include('components.pwa-tags')
+</head>
     <body class="font-sans text-gray-900 antialiased overflow-hidden">
         <div class="blob -top-48 -left-48"></div>
         <div class="blob bottom-0 -right-48"></div>

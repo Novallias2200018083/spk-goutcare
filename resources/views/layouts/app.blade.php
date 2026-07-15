@@ -25,7 +25,8 @@
             body { font-family: 'Inter', sans-serif; }
             [x-cloak] { display: none !important; }
         </style>
-    </head>
+        @include('components.pwa-tags')
+</head>
     <body class="antialiased bg-slate-50 text-slate-900" 
           x-data="{ 
               sidebarOpen: localStorage.getItem('sidebarOpen') !== null ? localStorage.getItem('sidebarOpen') === 'true' : window.innerWidth >= 768,

@@ -1,0 +1,21 @@
+{
+    "name": "SPK GoutCare",
+    "short_name": "GoutCare",
+    "start_url": "/login",
+    "background_color": "#ffffff",
+    "theme_color": "#1e293b",
+    "display": "standalone",
+    "orientation": "portrait",
+    "icons": [
+        {
+            "src": "/pwa/icon-192x192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "/pwa/icon-512x512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ]
+}
