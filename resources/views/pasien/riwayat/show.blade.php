@@ -218,7 +218,7 @@
                                     <div class="text-right md:text-center">
                                         <span class="block text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1">Kelayakan</span>
                                         <span class="inline-block px-2.5 py-1 rounded-md text-[9px] md:text-[10px] font-bold uppercase tracking-widest border border-{{ $statusColor }}-200 bg-{{ $statusColor }}-50 text-{{ $statusColor }}-600 shadow-sm">
-                                            <i class="fas {{ $isBahaya ? 'fa-times-circle' : 'fa-check-circle' }} mr-1"></i>{{ $detail->status_kelayakan }}
+                                            <i class="fas {{ $isTidak ? 'fa-times-circle' : 'fa-check-circle' }} mr-1"></i>{{ $detail->status_kelayakan }}
                                         </span>
                                     </div>
                                 </div>
