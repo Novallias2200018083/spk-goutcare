@@ -285,9 +285,9 @@ class RekomendasiController extends Controller
 
                 // Tentukan Status Kelayakan (Aturan Mutlak)
                 if ($nilaiAkhir < 3.5 || $purinVal > $tPurin) {
-                    $status = 'BAHAYA / TIDAK DIREKOMENDASIKAN';
+                    $status = 'TIDAK DIREKOMENDASIKAN';
                 } elseif ($nilaiAkhir >= 4.0) {
-                    $status = 'SANGAT DIREKOMENDASIKAN';
+                    $status = 'DIREKOMENDASIKAN';
                 } else {
                     // Jika Skor Akhir 3.5 - 3.9
                     $status = 'CUKUP DIREKOMENDASIKAN';

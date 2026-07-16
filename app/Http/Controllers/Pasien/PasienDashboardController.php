@@ -20,7 +20,7 @@ class PasienDashboardController extends Controller
         // Mengambil detail rekomendasi terbaik dari riwayat terbaru
         $latestRiwayat = $user->riwayatRekomendasis()->with(['detailRiwayats.makanan'])->latest()->first();
         $rekomendasiTerbaik = $latestRiwayat ? $latestRiwayat->detailRiwayats()
-            ->whereIn('status_kelayakan', ['Sangat Direkomendasikan', 'Direkomendasikan', 'Cukup Direkomendasikan'])
+            ->whereIn('status_kelayakan', ['Direkomendasikan', 'Cukup Direkomendasikan'])
             ->orderBy('nilai_akhir', 'desc')
             ->take(5)
             ->get() : collect();

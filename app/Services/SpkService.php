@@ -215,9 +215,9 @@ class SpkService
             
             // Aturan Mutlak
             if (!$isLayak || $finalScore < 3.5) {
-                $statusLayak = 'BAHAYA / TIDAK DIREKOMENDASIKAN';
+                $statusLayak = 'TIDAK DIREKOMENDASIKAN';
             } elseif ($finalScore >= 4.0) {
-                $statusLayak = 'SANGAT DIREKOMENDASIKAN';
+                $statusLayak = 'DIREKOMENDASIKAN';
             } else {
                 // Skor Akhir 3.5 - 3.9
                 $statusLayak = 'CUKUP DIREKOMENDASIKAN';

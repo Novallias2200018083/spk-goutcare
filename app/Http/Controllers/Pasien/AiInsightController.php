@@ -39,9 +39,9 @@ class AiInsightController extends Controller
 
         $prompt .= "\nAturan mutlak:\n"
                  . "1. Nilai skor maksimal adalah 5.0.\n"
-                 . "2. Jika Skor Akhir >= 4.0, maka makanan ini SANGAT DIREKOMENDASIKAN karena profil gizi sangat cocok.\n"
+                 . "2. Jika Skor Akhir >= 4.0, maka makanan ini DIREKOMENDASIKAN karena profil gizi sangat cocok.\n"
                  . "3. Jika Skor Akhir 3.5 - 3.9, makanan ini CUKUP DIREKOMENDASIKAN.\n"
-                 . "4. Jika Skor Akhir < 3.5 ATAU Purin > Batas Pasien, makanan ini BAHAYA / TIDAK DIREKOMENDASIKAN karena jauh meleset.\n"
+                 . "4. Jika Skor Akhir < 3.5 ATAU Purin > Batas Pasien, makanan ini TIDAK DIREKOMENDASIKAN karena jauh meleset.\n"
                  . "Sekarang buat narasinya untuk makanan dengan purin " . $purin . " dan skor " . number_format($skor_akhir, 2) . ".\n"
                  . "Tolong berikan analisis komprehensif (maksimal 5 kalimat) dengan gaya bahasa yang sangat empati, profesional, dan memberikan edukasi yang menenangkan pasien. Jelaskan mengapa makanan ini direkomendasikan atau dilarang secara detail sesuai aturan di atas. Gunakan format markdown tebal untuk penekanan dan buat hasilnya terlihat sangat bagus.";
 
