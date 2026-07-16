@@ -122,7 +122,8 @@
                     <button @click="tabFilter = 'semua'" :class="tabFilter === 'semua' ? 'bg-slate-800 text-white shadow-md' : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-50'" class="shrink-0 whitespace-nowrap px-4 py-2.5 rounded-full text-[10px] sm:text-xs font-bold transition-all uppercase tracking-widest"><i class="fas fa-list sm:mr-1.5"></i> Semua Peringkat</button>
                     <button @click="tabFilter = 'aman'" :class="tabFilter === 'aman' ? 'bg-emerald-600 text-white shadow-md shadow-emerald-200' : 'bg-white border border-slate-200 text-emerald-700 hover:bg-emerald-50'" class="shrink-0 whitespace-nowrap px-4 py-2.5 rounded-full text-[10px] sm:text-xs font-bold transition-all uppercase tracking-widest"><i class="fas fa-check-circle sm:mr-1.5"></i> Aman Dikonsumsi</button>
                     <button @click="tabFilter = 'purin_terendah'" :class="tabFilter === 'purin_terendah' ? 'bg-blue-600 text-white shadow-md shadow-blue-200' : 'bg-white border border-slate-200 text-blue-700 hover:bg-blue-50'" class="shrink-0 whitespace-nowrap px-4 py-2.5 rounded-full text-[10px] sm:text-xs font-bold transition-all uppercase tracking-widest"><i class="fas fa-star sm:mr-1.5"></i> Pilihan Terbaik</button>
-                    <button @click="tabFilter = 'bahaya'" :class="tabFilter === 'bahaya' ? 'bg-rose-600 text-white shadow-md shadow-rose-200' : 'bg-white border border-slate-200 text-rose-700 hover:bg-rose-50'" class="shrink-0 whitespace-nowrap px-4 py-2.5 rounded-full text-[10px] sm:text-xs font-bold transition-all uppercase tracking-widest"><i class="fas fa-exclamation-triangle sm:mr-1.5"></i> Bahaya</button>
+                    <button @click="tabFilter = 'kurang'" :class="tabFilter === 'kurang' ? 'bg-amber-500 text-white shadow-md shadow-amber-200' : 'bg-white border border-slate-200 text-amber-600 hover:bg-amber-50'" class="shrink-0 whitespace-nowrap px-4 py-2.5 rounded-full text-[10px] sm:text-xs font-bold transition-all uppercase tracking-widest"><i class="fas fa-minus-circle sm:mr-1.5"></i> Kurang Direkomendasikan</button>
+                    <button @click="tabFilter = 'tidak'" :class="tabFilter === 'tidak' ? 'bg-rose-600 text-white shadow-md shadow-rose-200' : 'bg-white border border-slate-200 text-rose-700 hover:bg-rose-50'" class="shrink-0 whitespace-nowrap px-4 py-2.5 rounded-full text-[10px] sm:text-xs font-bold transition-all uppercase tracking-widest"><i class="fas fa-times-circle sm:mr-1.5"></i> Tidak Direkomendasikan</button>
                 </div>
 
                 @php
@@ -161,13 +162,15 @@
                     @foreach($detailRiwayats as $index => $detail)
                         @php
                             $isTop = $index < 3;
-                            $isBahaya = str_contains(strtolower($detail->status_kelayakan), 'bahaya') || str_contains(strtolower($detail->status_kelayakan), 'tidak');
+                            $sk = $detail->status_kelayakan;
+                            $isTidak   = ($sk === 'Tidak Direkomendasikan');
+                            $isKurang  = ($sk === 'Kurang Direkomendasikan');
+                            $isAman    = !$isTidak; // semua yg purinnya aman
                             $statusColor = 'slate';
-                            if($isBahaya) $statusColor = 'rose';
-                            elseif($detail->status_kelayakan == 'Sangat Direkomendasikan') $statusColor = 'emerald';
-                            elseif($detail->status_kelayakan == 'Direkomendasikan') $statusColor = 'emerald';
-                            elseif($detail->status_kelayakan == 'Cukup Direkomendasikan') $statusColor = 'blue';
-                            elseif($detail->status_kelayakan == 'Kurang Direkomendasikan') $statusColor = 'amber';
+                            if($isTidak) $statusColor = 'rose';
+                            elseif($sk === 'Direkomendasikan') $statusColor = 'emerald';
+                            elseif($sk === 'Cukup Direkomendasikan') $statusColor = 'blue';
+                            elseif($sk === 'Kurang Direkomendasikan') $statusColor = 'amber';
 
                             $purinValue = 0;
                             foreach($detail->makanan->nilaiKriterias as $nk) {
@@ -177,7 +180,7 @@
                                 }
                             }
                         @endphp
-                        <div x-show="tabFilter === 'semua' || (tabFilter === 'aman' && !{{ $isBahaya ? 'true' : 'false' }}) || (tabFilter === 'bahaya' && {{ $isBahaya ? 'true' : 'false' }})" 
+                        <div x-show="tabFilter === 'semua' || (tabFilter === 'aman' && {{ $isAman ? 'true' : 'false' }}) || (tabFilter === 'kurang' && {{ $isKurang ? 'true' : 'false' }}) || (tabFilter === 'tidak' && {{ $isTidak ? 'true' : 'false' }})" 
                              x-transition.opacity.duration.300ms
                              class="bg-white border {{ $isTop ? 'border-emerald-200 shadow-emerald-100/50' : 'border-slate-200 shadow-slate-100/50' }} rounded-xl p-4 md:p-5 shadow-sm hover:shadow-md hover:border-emerald-300 transition-all group relative overflow-hidden" 
                              x-data="{ open: false }">

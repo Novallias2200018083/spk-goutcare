@@ -284,13 +284,18 @@ class RekomendasiController extends Controller
                 }
 
                 // Tentukan Status Kelayakan (Aturan Mutlak)
-                if ($nilaiAkhir < 3.5 || $purinVal > $tPurin) {
-                    $status = 'TIDAK DIREKOMENDASIKAN';
+                if ($purinVal > $tPurin) {
+                    // Purin melebihi toleransi pasien → bahaya langsung
+                    $status = 'Tidak Direkomendasikan';
                 } elseif ($nilaiAkhir >= 4.0) {
-                    $status = 'DIREKOMENDASIKAN';
+                    // Skor tinggi, purin aman
+                    $status = 'Direkomendasikan';
+                } elseif ($nilaiAkhir >= 3.5) {
+                    // Skor sedang, purin aman
+                    $status = 'Cukup Direkomendasikan';
                 } else {
-                    // Jika Skor Akhir 3.5 - 3.9
-                    $status = 'CUKUP DIREKOMENDASIKAN';
+                    // Skor rendah, purin aman — masih bisa dikonsumsi tapi kurang optimal
+                    $status = 'Kurang Direkomendasikan';
                 }
 
                 DetailRiwayatRekomendasi::create([

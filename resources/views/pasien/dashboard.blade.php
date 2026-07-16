@@ -197,8 +197,8 @@
                                                 <h4 class="font-bold text-slate-800 text-sm line-clamp-1" title="{{ $rek->makanan->nama_makanan ?? 'Unknown' }}">{{ $rek->makanan->nama_makanan ?? 'Unknown' }}</h4>
                                                 <div class="text-[10px] font-bold mt-0.5 
                                                     {{ $rek->status_kelayakan == 'Direkomendasikan' ? 'text-emerald-600' : 
-                                                      ($rek->status_kelayakan == 'Cukup Direkomendasikan' ? 'text-indigo-600' : 
-                                                      ($rek->status_kelayakan == 'Tidak Direkomendasikan' ? 'text-red-600' : 'text-red-600')) }}">
+                                                      ($rek->status_kelayakan == 'Cukup Direkomendasikan' ? 'text-blue-600' : 
+                                                      ($rek->status_kelayakan == 'Kurang Direkomendasikan' ? 'text-amber-500' : 'text-red-600')) }}">
                                                     {{ $rek->status_kelayakan }}
                                                 </div>
                                                 @if($rek->makanan && $rek->makanan->deskripsi)

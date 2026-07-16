@@ -276,16 +276,15 @@
             @foreach($detailRiwayats as $detail)
                 @php
                     $statusClass = 'status-tidak-layak';
-                    $statusText = strtolower($detail->status_kelayakan);
-                    if (str_contains($statusText, 'sangat layak') || str_contains($statusText, 'sangat direkomendasikan')) {
-                        $statusClass = 'status-sangat-layak';
-                    } elseif (str_contains($statusText, 'layak') || str_contains($statusText, 'direkomendasikan')) {
-                        if (!str_contains($statusText, 'tidak') && !str_contains($statusText, 'kurang')) {
-                            $statusClass = 'status-layak';
-                        }
-                    } 
-                    if (str_contains($statusText, 'kurang')) {
-                        $statusClass = 'status-kurang-layak';
+                    $sk = $detail->status_kelayakan;
+                    if ($sk === 'Direkomendasikan') {
+                        $statusClass = 'status-sangat-layak'; // hijau
+                    } elseif ($sk === 'Cukup Direkomendasikan') {
+                        $statusClass = 'status-layak'; // biru
+                    } elseif ($sk === 'Kurang Direkomendasikan') {
+                        $statusClass = 'status-kurang-layak'; // kuning
+                    } else {
+                        $statusClass = 'status-tidak-layak'; // merah
                     }
                 @endphp
                 <tr>
