@@ -36,17 +36,49 @@
     </script>
 
     <style>
-        body {
+        html, body {
             font-family: 'Plus Jakarta Sans', sans-serif;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
             background-color: #fcfdfc;
-            background-image: 
+            background-image:
                 radial-gradient(at 0% 0%, rgba(16, 185, 129, 0.05) 0px, transparent 50%),
                 radial-gradient(at 100% 100%, rgba(59, 130, 246, 0.03) 0px, transparent 50%);
+            /* Prevent scroll on mobile by using fixed height */
             min-height: 100vh;
+            min-height: 100dvh;
         }
 
         .dark body {
             background: #0a0f0d;
+        }
+
+        /* Main wrapper fills viewport exactly */
+        .page-wrapper {
+            min-height: 100vh;
+            min-height: 100dvh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            box-sizing: border-box;
+        }
+
+        /* On mobile: make page-wrapper take exactly viewport height, no overflow */
+        @media (max-width: 1023px) {
+            .page-wrapper {
+                padding: 0.75rem;
+                align-items: stretch;
+            }
+            .page-wrapper > div {
+                display: flex;
+                align-items: center;
+                width: 100%;
+            }
         }
 
         .glass-effect {
@@ -113,29 +145,13 @@
         }
 
         /* Text contrast improvements */
-        .text-light-primary {
-            color: #1f2937;
-        }
+        .text-light-primary { color: #1f2937; }
+        .text-light-secondary { color: #4b5563; }
+        .text-light-muted { color: #6b7280; }
 
-        .text-light-secondary {
-            color: #4b5563;
-        }
-
-        .text-light-muted {
-            color: #6b7280;
-        }
-
-        .dark .text-light-primary {
-            color: #f9fafb;
-        }
-
-        .dark .text-light-secondary {
-            color: #d1d5db;
-        }
-
-        .dark .text-light-muted {
-            color: #9ca3af;
-        }
+        .dark .text-light-primary { color: #f9fafb; }
+        .dark .text-light-secondary { color: #d1d5db; }
+        .dark .text-light-muted { color: #9ca3af; }
 
         /* Feature card improvements */
         .feature-card {
@@ -149,45 +165,46 @@
         }
 
         @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(30px); }
+            to   { opacity: 1; transform: translateY(0); }
         }
 
         @keyframes fadeInLeft {
-            from {
-                opacity: 0;
-                transform: translateX(-30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
+            from { opacity: 0; transform: translateX(-30px); }
+            to   { opacity: 1; transform: translateX(0); }
         }
 
         @keyframes fadeInRight {
-            from {
-                opacity: 0;
-                transform: translateX(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
+            from { opacity: 0; transform: translateX(30px); }
+            to   { opacity: 1; transform: translateX(0); }
         }
 
         @keyframes float {
             0%, 100% { transform: translateY(0px) rotate(0deg); }
-            50% { transform: translateY(-20px) rotate(180deg); }
+            50%       { transform: translateY(-20px) rotate(180deg); }
         }
 
         .logo-glow {
             box-shadow: 0 0 30px rgba(16, 185, 129, 0.3);
+        }
+
+        /* ─── MOBILE CARD: compact, no-scroll ─── */
+        @media (max-width: 1023px) {
+            /* Hide the left branding panel entirely on mobile */
+            .branding-panel {
+                display: none !important;
+            }
+
+            /* Form panel takes full width */
+            .form-panel {
+                width: 100% !important;
+            }
+
+            /* Compact inner card card */
+            .auth-card {
+                border-radius: 1.5rem !important;
+                width: 100%;
+            }
         }
     </style>
 </head>
@@ -198,12 +215,13 @@
         <div class="floating-shape w-[600px] h-[600px] bg-emerald-500/5 -bottom-48 -right-48"></div>
     </div>
 
-    <div class="min-h-screen flex items-center justify-center p-3 sm:p-4 relative">
+    <div class="page-wrapper">
         <div class="w-full max-w-6xl animate-fade-in-up">
-            <div class="glass-effect rounded-[2rem] sm:rounded-3xl shadow-2xl overflow-hidden border border-white/40 dark:border-gray-700/50">
-                <div class="flex flex-col lg:flex-row min-h-[500px] lg:min-h-[600px]">
+            <div class="glass-effect auth-card rounded-[2rem] sm:rounded-3xl shadow-2xl overflow-hidden border border-white/40 dark:border-gray-700/50">
+                <div class="flex flex-col lg:flex-row lg:min-h-[600px]">
 
-                    <div class="lg:w-1/2 p-6 sm:p-8 lg:p-12 flex flex-col justify-center items-center text-center lg:text-left relative animate-fade-in-left">
+                    {{-- LEFT: Branding panel — hidden on mobile --}}
+                    <div class="branding-panel lg:w-1/2 p-6 sm:p-8 lg:p-12 flex flex-col justify-center items-center text-center lg:text-left relative animate-fade-in-left">
                         <div class="absolute inset-0 bg-gradient-to-br from-emerald-50/80 to-cyan-50/80 dark:from-emerald-900/40 dark:to-cyan-900/40"></div>
 
                         <div class="relative z-10 mb-6 lg:mb-8">
@@ -251,11 +269,22 @@
                         </div>
                     </div>
 
-                    <div class="lg:w-1/2 p-6 sm:p-8 lg:p-12 flex flex-col justify-center animate-fade-in-right bg-white/60 dark:bg-gray-900/60 backdrop-blur-md relative">
+                    {{-- RIGHT: Form panel --}}
+                    <div class="form-panel lg:w-1/2 p-5 sm:p-8 lg:p-12 flex flex-col justify-center animate-fade-in-right bg-white/60 dark:bg-gray-900/60 backdrop-blur-md relative">
                         <div class="w-full max-w-md mx-auto">
 
-                            <div class="text-center lg:text-left mb-6 sm:mb-8">
-                                <h2 class="text-2xl sm:text-3xl font-bold text-light-primary mb-1.5 sm:mb-2">
+                            {{-- Mobile-only: compact logo + brand --}}
+                            <div class="flex items-center gap-3 mb-4 lg:hidden">
+                                <a href="/" class="w-10 h-10 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-xl flex items-center justify-center logo-glow flex-shrink-0">
+                                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                </a>
+                                <span class="text-base font-bold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">GoutCare</span>
+                            </div>
+
+                            <div class="text-center lg:text-left mb-4 sm:mb-6">
+                                <h2 class="text-xl sm:text-2xl lg:text-3xl font-bold text-light-primary mb-1">
                                     Masuk ke Akun
                                 </h2>
                                 <p class="text-xs sm:text-sm text-light-secondary">
@@ -266,12 +295,12 @@
                                 </p>
                             </div>
 
-                            <x-auth-session-status class="mb-4" :status="session('status')" />
+                            <x-auth-session-status class="mb-3" :status="session('status')" />
 
-                            <form method="POST" action="{{ route('login') }}" class="space-y-6">
+                            <form method="POST" action="{{ route('login') }}" class="space-y-4">
                                 @csrf
                                 <div>
-                                    <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                    <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
                                         Email Address
                                     </label>
                                     <div class="relative">
@@ -284,7 +313,7 @@
                                             type="email"
                                             id="email"
                                             name="email"
-                                            class="input-field w-full pl-10 pr-4 py-3 rounded-xl text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none"
+                                            class="input-field w-full pl-10 pr-4 py-2.5 rounded-xl text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none"
                                             placeholder="nama@email.com"
                                             value="{{ old('email') }}"
                                             required
@@ -292,11 +321,11 @@
                                             autocomplete="username"
                                         >
                                     </div>
-                                    <x-input-error :messages="$errors->get('email')" class="mt-2" />
+                                    <x-input-error :messages="$errors->get('email')" class="mt-1" />
                                 </div>
 
                                 <div>
-                                    <label for="password" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                    <label for="password" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
                                         Password
                                     </label>
                                     <div class="relative">
@@ -309,13 +338,13 @@
                                             type="password"
                                             id="password"
                                             name="password"
-                                            class="input-field w-full pl-10 pr-4 py-3 rounded-xl text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none"
+                                            class="input-field w-full pl-10 pr-4 py-2.5 rounded-xl text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none"
                                             placeholder="••••••••"
                                             required
                                             autocomplete="current-password"
                                         >
                                     </div>
-                                    <x-input-error :messages="$errors->get('password')" class="mt-2" />
+                                    <x-input-error :messages="$errors->get('password')" class="mt-1" />
                                 </div>
 
                                 <div class="flex items-center justify-between">
@@ -337,7 +366,7 @@
 
                                 <button
                                     type="submit"
-                                    class="btn-primary w-full py-3 px-4 rounded-xl font-semibold text-white focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
+                                    class="btn-primary w-full py-2.5 px-4 rounded-xl font-semibold text-white focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
                                 >
                                     <span class="flex items-center justify-center">
                                         Masuk ke Dashboard
@@ -347,14 +376,13 @@
                                     </span>
                                 </button>
 
-
-                                <div class="mt-8">
+                                <div class="pt-2">
                                     <div class="relative">
                                         <div class="absolute inset-0 flex items-center">
                                             <div class="w-full border-t border-gray-300 dark:border-gray-600"></div>
                                         </div>
-                                        <div class="relative flex justify-center text-xs sm:text-sm">
-                                            <span class="px-3 bg-transparent text-light-muted font-medium bg-white/60 dark:bg-gray-900/60 backdrop-blur-md rounded-full">
+                                        <div class="relative flex justify-center text-xs">
+                                            <span class="px-3 text-light-muted font-medium bg-white/60 dark:bg-gray-900/60 backdrop-blur-md rounded-full">
                                                 GoutCare v1.0
                                             </span>
                                         </div>
@@ -370,7 +398,7 @@
 
     <button
         id="darkModeToggle"
-        class="fixed top-4 right-4 p-3 bg-white/20 dark:bg-gray-800/50 backdrop-blur-lg rounded-full shadow-lg hover:shadow-xl transition-all duration-300 group"
+        class="fixed top-4 right-4 p-2.5 bg-white/20 dark:bg-gray-800/50 backdrop-blur-lg rounded-full shadow-lg hover:shadow-xl transition-all duration-300 group z-50"
     >
         <svg class="w-5 h-5 text-gray-800 dark:text-gray-200 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path class="dark:hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
@@ -383,7 +411,6 @@
         const darkModeToggle = document.getElementById('darkModeToggle');
         const html = document.documentElement;
 
-        // Check for saved theme preference or default to light mode
         const currentTheme = localStorage.getItem('theme') || 'light';
         html.classList.toggle('dark', currentTheme === 'dark');
 
@@ -401,7 +428,6 @@
             input.addEventListener('focus', () => {
                 input.parentElement.classList.add('focused');
             });
-
             input.addEventListener('blur', () => {
                 input.parentElement.classList.remove('focused');
             });
@@ -410,8 +436,6 @@
         // Add loading state to submit button
         form.addEventListener('submit', (e) => {
             const submitBtn = form.querySelector('button[type="submit"]');
-            const originalText = submitBtn.innerHTML;
-
             submitBtn.innerHTML = `
                 <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                     <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
@@ -420,20 +444,6 @@
                 Sedang masuk...
             `;
             submitBtn.disabled = true;
-
-            // The commented-out setTimeout block is for demo purposes.
-            // In a real application, you'd want to remove this and let the form submission handle the redirection.
-            // If you uncomment it, the form submission will be prevented by e.preventDefault();
-            // setTimeout(() => {
-            //     submitBtn.innerHTML = originalText;
-            //     submitBtn.disabled = false;
-            //     alert('Login demo - form berhasil disubmit!');
-            // }, 2000);
-        });
-
-        // Add animation for the login card on load
-        window.addEventListener('load', () => {
-            document.querySelector('.animate-fade-in-up')?.classList.remove('opacity-0', '-translate-y-4');
         });
     </script>
 </body>
