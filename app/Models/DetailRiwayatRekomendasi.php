@@ -48,8 +48,8 @@ class DetailRiwayatRekomendasi extends Model
 
         // Pengecekan mutlak medis (Purin melebihi batas) atau skor kurang dari 3.5
         if ($purinMakanan > $toleransiPurin || $this->nilai_akhir < 3.5) {
-            $insight = "⚠️ **ANALISIS KRITIS : STATUS BAHAYA**\n\n";
-            $insight .= "Makanan ini **SANGAT TIDAK DIREKOMENDASIKAN** untuk Anda konsumsi. ";
+            $insight = "⚠️ **ANALISIS : TIDAK DIREKOMENDASIKAN**\n\n";
+            $insight .= "Makanan ini **TIDAK DIREKOMENDASIKAN** untuk Anda konsumsi. ";
             if ($purinMakanan > $toleransiPurin) {
                 $insight .= "Terdapat **kandungan purin yang terlampau tinggi (" . $purinMakanan . " mg)**, menembus batas maksimal toleransi harian tubuh Anda (" . $toleransiPurin . " mg). ";
             }
@@ -61,7 +61,7 @@ class DetailRiwayatRekomendasi extends Model
         // Jika Purin Aman dan Skor >= 3.5
         else {
             if ($this->nilai_akhir >= 4.0) {
-                $insight = "✨ **ANALISIS OPTIMAL : SANGAT DIREKOMENDASIKAN**\n\n";
+                $insight = "✨ **ANALISIS : DIREKOMENDASIKAN**\n\n";
                 $insight .= "Berita baik! Makanan ini merupakan **pilihan menu yang luar biasa sehat dan sangat selaras** dengan kondisi tubuh Anda. ";
                 $insight .= "Kandungan purinnya yang sebesar **" . $purinMakanan . " mg** masih berada dalam teritori yang sangat aman (Toleransi Anda: " . $toleransiPurin . " mg). ";
                 $insight .= "Sistem mencatat tingkat kecocokan gizi yang **sangat baik (Skor: " . number_format($this->nilai_akhir, 2) . " / 5.0)**, memastikan tubuh Anda mendapatkan asupan energi dan nutrisi yang pas tanpa berisiko menaikkan kadar asam urat secara drastis. Silakan nikmati menu ini dengan tenang!";
