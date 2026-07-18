@@ -30,50 +30,63 @@
                             <p class="text-gray-500">Tentukan rentang nilai (1-5) untuk setiap kriteria nutrisi.</p>
                         </div>
                     @else
-                        <div class="overflow-x-auto border border-slate-100 rounded-lg">
-                            <table class="w-full text-sm text-left">
-                                <thead class="text-xs text-slate-500 uppercase bg-slate-50 border-b border-slate-100">
-                                    <tr>
-                                        <th scope="col" class="px-6 py-4 font-semibold">Kriteria</th>
-                                        <th scope="col" class="px-6 py-4 font-semibold text-center">Rentang Nilai</th>
-                                        <th scope="col" class="px-6 py-4 font-semibold text-center">Nilai Skala</th>
-                                        <th scope="col" class="px-6 py-4 font-semibold">Keterangan</th>
-                                        <th scope="col" class="px-6 py-4 font-semibold text-right">Aksi</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="divide-y divide-gray-100">
-                                    @foreach ($skalas as $skala)
-                                        <tr class="hover:bg-emerald-50/50 transition duration-150">
-                                             <td class="px-6 py-4 font-semibold text-slate-800">{{ $skala->kriteria->nama_kriteria }}</td>
-                                            <td class="px-6 py-4 text-center font-mono">
-                                                <span class="bg-slate-100 px-2 py-1 rounded text-[10px]">{{ $skala->batas_bawah }}</span>
-                                                <span class="mx-1 text-slate-300">to</span>
-                                                <span class="bg-slate-100 px-2 py-1 rounded text-[10px]">{{ $skala->batas_atas }}</span>
-                                            </td>
-                                            <td class="px-6 py-4 text-center">
-                                                <span class="w-8 h-8 inline-flex items-center justify-center rounded bg-emerald-600 text-white font-bold text-xs">
-                                                    {{ $skala->nilai_skala }}
-                                                </span>
-                                            </td>
-                                            <td class="px-6 py-4 text-slate-500 text-xs italic">{{ $skala->keterangan }}</td>
-                                            <td class="px-6 py-5 text-right whitespace-nowrap">
-                                                <div class="flex justify-end gap-2">
-                                                    <a href="{{ route('admin.skala.edit', $skala->id) }}" class="p-2 bg-emerald-50 text-emerald-600 rounded-xl hover:bg-emerald-100 transition duration-300">
-                                                        <i class="fas fa-edit"></i>
-                                                    </a>
-                                                    <form action="{{ route('admin.skala.destroy', $skala->id) }}" method="POST" class="inline">
-                                                        @csrf
-                                                        @method('DELETE')
-                                                        <button type="submit" class="p-2 bg-red-50 text-red-600 rounded-xl hover:bg-red-100 transition duration-300" onclick="return confirm('Hapus skala ini?')">
-                                                            <i class="fas fa-trash"></i>
-                                                        </button>
-                                                    </form>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
+                        @php
+                            $groupedSkalas = $skalas->groupBy(function($item) {
+                                return $item->kriteria->nama_kriteria;
+                            });
+                        @endphp
+
+                        <div class="space-y-8">
+                            @foreach ($groupedSkalas as $kriteriaNama => $skalaGroup)
+                                <div>
+                                    <h3 class="text-lg font-bold text-slate-800 mb-4 border-l-4 border-emerald-500 pl-3">
+                                        {{ $kriteriaNama }}
+                                    </h3>
+                                    <div class="overflow-x-auto border border-slate-100 rounded-lg shadow-sm">
+                                        <table class="w-full text-sm text-left bg-white">
+                                            <thead class="text-xs text-slate-500 uppercase bg-slate-50 border-b border-slate-100">
+                                                <tr>
+                                                    <th scope="col" class="px-6 py-4 font-semibold text-center w-1/3">Rentang Nilai</th>
+                                                    <th scope="col" class="px-6 py-4 font-semibold text-center">Nilai Skala</th>
+                                                    <th scope="col" class="px-6 py-4 font-semibold w-1/3">Keterangan</th>
+                                                    <th scope="col" class="px-6 py-4 font-semibold text-right">Aksi</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody class="divide-y divide-gray-100">
+                                                @foreach ($skalaGroup as $skala)
+                                                    <tr class="hover:bg-emerald-50/50 transition duration-150">
+                                                        <td class="px-6 py-4 text-center font-mono">
+                                                            <span class="bg-slate-100 px-2 py-1 rounded text-[10px]">{{ $skala->batas_bawah }}</span>
+                                                            <span class="mx-1 text-slate-300">to</span>
+                                                            <span class="bg-slate-100 px-2 py-1 rounded text-[10px]">{{ $skala->batas_atas }}</span>
+                                                        </td>
+                                                        <td class="px-6 py-4 text-center">
+                                                            <span class="w-8 h-8 inline-flex items-center justify-center rounded bg-emerald-600 text-white font-bold text-xs shadow-sm">
+                                                                {{ $skala->nilai_skala }}
+                                                            </span>
+                                                        </td>
+                                                        <td class="px-6 py-4 text-slate-500 text-sm italic">{{ $skala->keterangan }}</td>
+                                                        <td class="px-6 py-4 text-right whitespace-nowrap">
+                                                            <div class="flex justify-end gap-2">
+                                                                <a href="{{ route('admin.skala.edit', $skala->id) }}" class="p-2 bg-emerald-50 text-emerald-600 rounded-xl hover:bg-emerald-100 transition duration-300" title="Edit">
+                                                                    <i class="fas fa-edit"></i>
+                                                                </a>
+                                                                <form action="{{ route('admin.skala.destroy', $skala->id) }}" method="POST" class="inline">
+                                                                    @csrf
+                                                                    @method('DELETE')
+                                                                    <button type="submit" class="p-2 bg-red-50 text-red-600 rounded-xl hover:bg-red-100 transition duration-300" onclick="return confirm('Hapus skala ini?')" title="Hapus">
+                                                                        <i class="fas fa-trash"></i>
+                                                                    </button>
+                                                                </form>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                @endforeach
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            @endforeach
                         </div>
                     @endif
                 </div>
